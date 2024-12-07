@@ -7,6 +7,7 @@ license = "MIT"
 [build]
 opt_level = "separated"
 files = [
+    "lib/common/random_ex.fix",
     "lib/monad/random.fix",
 ]
 
@@ -14,6 +15,7 @@ files = [
 opt_level = "separated"
 files = [
     "tests/test.fix",
+    "tests/common/random_ex_test.fix",
     "tests/monad/monad_random_test.fix",
 ]
 

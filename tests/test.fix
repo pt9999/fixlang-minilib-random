@@ -3,10 +3,12 @@ module Test;
 import Minilib.Testing.UnitTest;
 
 import MonadRandomTest;
+import RandomExTest;
 
 testsuite: TestSuite;
 testsuite = [
     ("MonadRandomTest", MonadRandomTest::main),
+    ("RandomExTest", RandomExTest::main),
 ];
 
 
