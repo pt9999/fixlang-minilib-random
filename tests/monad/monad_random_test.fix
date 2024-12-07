@@ -1,0 +1,91 @@
+module MonadRandomTest;
+
+import Random;
+
+import Minilib.Monad.Random;
+import Minilib.Monad.State;
+import Minilib.Monad.IO;
+import Minilib.Testing.UnitTest;
+
+test_random_u64: TestCase;
+test_random_u64 = (
+    make_test("test_random_u64") $ |_|
+    let random = Random::init_by_seed(123_U64);
+    do {
+        let u64_a: U64 = *random_U64;
+        let u64_b: U64 = *random_U64;
+        println("u64:" + (u64_a, u64_b).to_string).lift_io;;
+        // If equal accidentally, change random seed
+        assert_true("u64", u64_a != u64_b).lift_iofail;;
+        pure()
+    }.eval_state_t(random)
+);
+
+test_random_u32: TestCase;
+test_random_u32 = (
+    make_test("test_random_u32") $ |_|
+    let random = Random::init_by_seed(124_U64);
+    do {
+        let u32_a: U32 = *random_U32;
+        let u32_b: U32 = *random_U32;
+        println("u32:" + (u32_a, u32_b).to_string).lift_io;;
+        // If equal accidentally, change random seed
+        assert_true("u32", u32_a != u32_b).lift_iofail;;
+        pure()
+    }.eval_state_t(random)
+);
+
+test_random_u16: TestCase;
+test_random_u16 = (
+    make_test("test_random_u16") $ |_|
+    let random = Random::init_by_seed(125_U64);
+    do {
+        let u16_a: U16 = *random_U16;
+        let u16_b: U16 = *random_U16;
+        println("u16:" + (u16_a, u16_b).to_string).lift_io;;
+        // If equal accidentally, change random seed
+        assert_true("u16", u16_a != u16_b).lift_iofail;;
+        pure()
+    }.eval_state_t(random)
+);
+
+test_random_u8: TestCase;
+test_random_u8 = (
+    make_test("test_random_u8") $ |_|
+    let random = Random::init_by_seed(126_U64);
+    do {
+        let u8_a: U8 = *random_U8;
+        let u8_b: U8 = *random_U8;
+        println("u8:" + (u8_a, u8_b).to_string).lift_io;;
+        // If equal accidentally, change random seed
+        assert_true("u8", u8_a != u8_b).lift_iofail;;
+        pure()
+    }.eval_state_t(random)
+);
+
+test_random_bytes: TestCase;
+test_random_bytes = (
+    make_test("test_random_bytes") $ |_|
+    let random = Random::init_by_seed(127_U64);
+    do {
+        let bytes_a: Array U8 = *random_bytes(4);
+        let bytes_b: Array U8 = *random_bytes(4);
+        println("bytes:" + (bytes_a, bytes_b).to_string).lift_io;;
+        // If equal accidentally, change random seed
+        assert_true("bytes", bytes_a != bytes_b).lift_iofail;;
+        pure()
+    }.eval_state_t(random)
+);
+
+main: IO ();
+main = (
+    [
+        test_random_u64,
+        test_random_u32,
+        test_random_u16,
+        test_random_u8,
+        test_random_bytes,
+    ]
+    .run_test_driver
+);
+

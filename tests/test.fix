@@ -1,0 +1,17 @@
+module Test;
+
+import Minilib.Testing.UnitTest;
+
+import MonadRandomTest;
+
+testsuite: TestSuite;
+testsuite = [
+    ("MonadRandomTest", MonadRandomTest::main),
+];
+
+
+test: IO ();
+test = (
+    testsuite.run
+);
+

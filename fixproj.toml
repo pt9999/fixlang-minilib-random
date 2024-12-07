@@ -1,0 +1,35 @@
+[general]
+name = "minilib-random"
+version = "0.1.0"
+authors = ["pt9999"]
+license = "MIT"
+
+[build]
+opt_level = "separated"
+files = [
+    "lib/monad/random.fix",
+]
+
+[build.test]
+opt_level = "separated"
+files = [
+    "tests/test.fix",
+    "tests/monad/monad_random_test.fix",
+]
+
+[[dependencies]]
+name = "random"
+version = "*"
+git = { url = "https://github.com/tttmmmyyyy/fixlang-random.git" }
+
+[[dependencies]]
+name = "minilib-common"
+version = "*"
+# path = "../fixlang-minilib-common"
+git = { url = "https://github.com/pt9999/fixlang-minilib-common.git" }
+
+[[dependencies]]
+name = "minilib-monad"
+version = "*"
+# path = "../fixlang-minilib-monad"
+git = { url = "https://github.com/pt9999/fixlang-minilib-monad.git" }

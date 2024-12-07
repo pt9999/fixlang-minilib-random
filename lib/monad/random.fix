@@ -1,0 +1,44 @@
+// Random Number Generator Monad
+module Minilib.Monad.Random;
+
+import Random;
+
+import Minilib.Common.RandomEx;
+import Minilib.Monad.State;
+import Minilib.Monad.Trans;
+
+trait MonadRandomU64 = Functor + Monad + MonadRandomU64IF;
+
+trait [m: * -> *] m: MonadRandomU64IF {
+    random_U64: m U64;
+}
+
+trait MonadRandomBytes = Functor + Monad + MonadRandomBytesIF;
+
+trait [m: * -> *] m: MonadRandomBytesIF {
+    random_bytes: I64 -> m (Array U8);
+}
+
+// `random_U8` generates a random integer of U8.
+random_U8: [m: MonadRandomU64] m U8;
+random_U8 = random_U64.map(to_U8);
+
+// `random_U16` generates a random integer of U8.
+random_U16: [m: MonadRandomU64] m U16;
+random_U16 = random_U64.map(to_U16);
+
+// `random_U32` generates a random integer of U32.
+random_U32: [m: MonadRandomU64] m U32;
+random_U32 = random_U64.map(to_U32);
+
+impl [m: Monad] StateT Random m: MonadRandomU64IF {
+    random_U64 = make_state_t_monad $ |random| (
+        pure $ random.generate_U64
+    );
+}
+
+impl [m: Monad] StateT Random m: MonadRandomBytesIF {
+    random_bytes = |size| make_state_t_monad $ |random| (
+        pure $ random.generate_array(size, generate_U8)
+    );
+}
