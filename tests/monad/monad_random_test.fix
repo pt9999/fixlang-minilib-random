@@ -77,6 +77,24 @@ test_random_bytes = (
     }.eval_state_t(random)
 );
 
+test_random_array: TestCase;
+test_random_array = (
+    make_test("test_random_array") $ |_|
+    let random = Random::init_by_seed(128_U64);
+    do {
+        let size = 1000;
+        // same as `random_bytes`, but maybe slower
+        let bytes_a: Array U8 = *random_array(size, random_U8);
+        let bytes_b: Array U8 = *random_array(size, random_U8);
+        //println("bytes:" + (bytes_a, bytes_b).to_string).lift_io;;
+        assert_equal("size", size, bytes_a.get_size).lift_iofail;;
+        assert_equal("size", size, bytes_b.get_size).lift_iofail;;
+        // If equal accidentally, change random seed
+        assert_true("bytes", bytes_a != bytes_b).lift_iofail;;
+        pure()
+    }.eval_state_t(random)
+);
+
 main: IO ();
 main = (
     [
@@ -85,6 +103,7 @@ main = (
         test_random_u16,
         test_random_u8,
         test_random_bytes,
+        test_random_array,
     ]
     .run_test_driver
 );
