@@ -1,0 +1,48 @@
+module Minilib.Monad.FreeRandom;
+
+import Minilib.Monad.Random;
+
+// Free Random Monad.
+//
+// This type may be used in a situation such as polymorphic types cannot be used,
+// for example an interface of an API.
+type FreeRandom a = box union {
+    fr_pure: a,
+    fr_u64: U64 -> FreeRandom a,
+    fr_bytes: (I64, Array U8 -> FreeRandom a),
+};
+
+impl FreeRandom: Monad {
+    pure = fr_pure;
+    bind = |f, ma| (
+        match ma {
+            fr_pure(a) => f(a),
+            fr_u64(next) => fr_u64 $ next >> bind(f),
+            fr_bytes((size, next)) => fr_bytes $ (size, next >> bind(f)),
+        }
+    );
+}
+
+impl FreeRandom: Functor {
+    map = |f| bind(f >> pure);
+}
+
+impl FreeRandom: MonadRandomIF {
+    random_U64 = (
+        fr_u64 $ fr_pure
+    );
+    random_bytes = |size| (
+        fr_bytes $ (size, fr_pure)
+    );
+}
+
+namespace FreeRandom {
+    interpret: [m: MonadRandom] FreeRandom a -> m a;
+    interpret = |fr| (
+        match fr {
+            fr_pure(a) => pure(a),
+            fr_u64(next) => next(*random_U64).interpret,
+            fr_bytes((size, next)) => next(*random_bytes(size)).interpret,
+        }
+    );
+}

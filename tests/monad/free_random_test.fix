@@ -1,0 +1,58 @@
+module FreeRandomTest;
+
+import Random;
+
+import Minilib.Monad.FunctorM;
+import Minilib.Monad.Random;
+import Minilib.Monad.FreeRandom;
+import Minilib.Monad.State;
+import Minilib.Monad.IO;
+import Minilib.Testing.UnitTest;
+
+type Item = unbox struct {
+    u64: U64,
+    bytes: Array U8,
+};
+
+impl Item: ToString {
+    to_string = |item| "Item" + (item.@u64, item.@bytes).to_string;
+}
+
+generate_item: [m: MonadRandom] m Item;
+generate_item = (
+    pure $ Item {
+        u64: *random_U64,
+        bytes: *random_bytes(4),
+    }
+);
+
+generate_items: [m: MonadRandom] I64 -> m (Array Item);
+generate_items = |size| (
+    Iterator::range(0, size).to_array.map_m(|i| generate_item)
+);
+
+my_items: FreeRandom (Array Item);
+my_items = generate_items(5);
+
+test_free_random: TestCase;
+test_free_random = (
+    make_test("test_free_random") $ |_|
+
+    let random = Random::init_by_seed(123_U64);
+    do {
+        let items = *my_items.interpret;
+        println("items=" + items.to_string).lift_io;;
+        // If equal accidentally, change random seed
+        assert_true("u64", items.@(0).@u64 != items.@(1).@u64).lift_iofail;;
+        pure()
+    }.eval_state_t(random)
+);
+
+main: IO ();
+main = (
+    [
+        test_free_random,
+    ]
+    .run_test_driver
+);
+

@@ -2,13 +2,15 @@ module Test;
 
 import Minilib.Testing.UnitTest;
 
-import MonadRandomTest;
 import RandomExTest;
+import FreeRandomTest;
+import MonadRandomTest;
 
 testsuite: TestSuite;
 testsuite = [
-    ("MonadRandomTest", MonadRandomTest::main),
     ("RandomExTest", RandomExTest::main),
+    ("FreeRandomTest", FreeRandomTest::main),
+    ("MonadRandomTest", MonadRandomTest::main),
 ];
 
 
