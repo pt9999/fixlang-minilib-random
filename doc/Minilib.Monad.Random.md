@@ -22,6 +22,10 @@ A trait for a monad that generates random numbers every time.
 
 # Trait implementations
 
+### `impl [m : Minilib.Monad.IO::MonadIOFail] Minilib.Monad.State::StateT Minilib.Crypto.SecureRandom::SecureRandom m : Minilib.Monad.Random::MonadRandomIF`
+
+Because of orphan rule, this impl should be defined here
+
 ### `impl [m : Std::Monad] Minilib.Monad.State::StateT Random::Random m : Minilib.Monad.Random::MonadRandomIF`
 
 # Values

@@ -1,7 +1,21 @@
 module SecureRandomTest;
 
 import Minilib.Crypto.SecureRandom;
+import Minilib.Monad.Random;
+import Minilib.Monad.State;
+import Minilib.Monad.IO;
 import Minilib.Testing.UnitTest;
+
+test_generate_U64: TestCase;
+test_generate_U64 = (
+    make_test("test_generate_U64") $ |_|
+    let secure_random = *SecureRandom::make;
+    let (secure_random, a) = *secure_random.generate_U64;
+    let (secure_random, b) = *secure_random.generate_U64;
+    println("(a,b)="+(a,b).to_string).lift;;
+    // Values of `a` and `b` depends on /dev/urandom
+    pure()
+);
 
 test_generate_bytes: TestCase;
 test_generate_bytes = (
@@ -18,10 +32,28 @@ test_generate_bytes = (
     )
 );
 
+test_monad_random: TestCase;
+test_monad_random = (
+    make_test("test_monad_random") $ |_|
+    let secure_random = *SecureRandom::make;
+    do {
+        let a = *random_U64;
+        let b = *random_U64;
+        println("(a,b)="+(a,b).to_string).lift_io;;
+        let a = *random_bytes(4);
+        let b = *random_bytes(4);
+        println("(a,b)="+(a,b).to_string).lift_io;;
+        pure()
+    }
+    .eval_state_t(secure_random)
+);
+
 main: IO ();
 main = (
     [
+        test_generate_U64,
         test_generate_bytes,
+        test_monad_random,
         TestCase::empty
     ]
     .run_test_driver
