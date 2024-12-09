@@ -2,14 +2,24 @@ module Minilib.Trait.Rng;
 
 import Random;
 import Minilib.Common.RandomEx;
+import Minilib.Functor.Pair;
 import Minilib.Monad.Identity;
 import Minilib.Monad.State;
 
+// A trait for Random Number Generator.
 trait rg: Rng {
     type RngResult rg a;
+    // Generates a random integer of U64.
     rng_U64: rg -> RngResult rg (rg, U64);
+    // Generates random bytes of specified size.
     rng_bytes: I64 -> rg -> RngResult rg (rg, Array U8);
 }
+
+// Convert a lens action using PairLT. Useful for containers.
+lens_rng: [f: Functor]
+    ((a -> PairLT r f a) -> (c -> PairLT r f c)) ->
+    ((a -> f (a, r)) -> (c -> f (c, r)));
+lens_rng = |act, g| act(g >> PairLT::make) >> PairLT::get;
 
 impl Random: Rng {
     type RngResult Random r = Identity r;

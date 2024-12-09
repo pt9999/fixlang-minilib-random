@@ -1,7 +1,6 @@
 module SecureRandomTest;
 
 import Minilib.Crypto.SecureRandom;
-import Minilib.Functor.Pair;
 import Minilib.Monad.Random;
 import Minilib.Monad.State;
 import Minilib.Monad.IO;
@@ -57,8 +56,8 @@ type Container = unbox struct {
 
 impl Container: Rng {
     type RngResult Container r = IOFail r;
-    rng_U64 = act_secure_random(rng_U64 >> PairLT::make) >> PairLT::get;
-    rng_bytes = |size| act_secure_random(rng_bytes(size) >> PairLT::make) >> PairLT::get;
+    rng_U64 = rng_U64.lens_rng(act_secure_random);
+    rng_bytes = |size| rng_bytes(size).lens_rng(act_secure_random);
 }
 
 test_container: TestCase;

@@ -6,7 +6,6 @@ import Minilib.Monad.Identity;
 import Minilib.Monad.Random;
 import Minilib.Monad.State;
 import Minilib.Monad.IO;
-import Minilib.Functor.Pair;
 import Minilib.Trait.Rng;
 import Minilib.Testing.UnitTest;
 
@@ -105,8 +104,8 @@ type Container = unbox struct {
 
 impl Container: Rng {
     type RngResult Container r = Identity r;
-    rng_U64 = act_random(rng_U64 >> PairLT::make) >> PairLT::get;
-    rng_bytes = |size| act_random(rng_bytes(size) >> PairLT::make) >> PairLT::get;
+    rng_U64 = rng_U64.lens_rng(act_random);
+    rng_bytes = |size| rng_bytes.lens_rng(act_random);
 }
 
 test_container: TestCase;
