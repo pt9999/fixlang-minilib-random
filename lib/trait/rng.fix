@@ -1,0 +1,53 @@
+module Minilib.Trait.Rng;
+
+import Random;
+import Minilib.Common.RandomEx;
+import Minilib.Crypto.SecureRandom;
+import Minilib.Monad.Identity;
+import Minilib.Monad.State;
+
+trait a: Rng {
+    type RngResult a r;
+    rng_U64: a -> RngResult a (a, U64);
+    rng_bytes: I64 -> a -> RngResult a (a, Array U8);
+}
+
+impl Random: Rng {
+    type RngResult Random r = Identity r;
+    rng_U64 = |random| pure $ random.generate_U64;
+    rng_bytes = |size, random| pure $ random.generate_array(size, generate_U8);
+}
+
+impl SecureRandom: Rng {
+    type RngResult SecureRandom r = IOFail r;
+    rng_U64 = SecureRandom::generate_U64;
+    rng_bytes = SecureRandom::generate_bytes;
+}
+
+type [m: *->*] RngT rg m = unbox struct {
+    data: rg,
+};
+
+namespace RngT {
+    rng_t: [m: *->*] rg -> RngT rg m;
+    rng_t = |rg| RngT { data: rg };
+
+    get: [m: *->*] RngT rg m -> rg;
+    get = @data;
+}
+
+impl [rg: Rng, m: Monad,
+      // can accept any functor insted of Identity ?
+      RngResult rg (rg, U64) = Identity (rg, U64),
+      RngResult rg (rg, Array U8) = Identity (rg, Array U8)
+      ] RngT rg m: Rng {
+    type RngResult (RngT rg m) a = m a;
+    rng_U64 = |rgf| (
+        let (rg, a) = Identity::get $ rgf.get.rng_U64;
+        pure $ (rng_t(rg), a)
+    );
+    rng_bytes = |size, rgf| (
+        let (rg, a) = Identity::get $ rgf.get.rng_bytes(size);
+        pure $ (rng_t(rg), a)
+    );
+}

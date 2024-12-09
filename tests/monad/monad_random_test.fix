@@ -2,9 +2,11 @@ module MonadRandomTest;
 
 import Random;
 
+import Minilib.Monad.Identity;
 import Minilib.Monad.Random;
 import Minilib.Monad.State;
 import Minilib.Monad.IO;
+import Minilib.Trait.Rng;
 import Minilib.Testing.UnitTest;
 
 test_random_u64: TestCase;
@@ -18,7 +20,7 @@ test_random_u64 = (
         // If equal accidentally, change random seed
         assert_true("u64", u64_a != u64_b).lift_iofail;;
         pure()
-    }.eval_state_t(random)
+    }.eval_state_t(random.rng_t)
 );
 
 test_random_u32: TestCase;
@@ -32,7 +34,7 @@ test_random_u32 = (
         // If equal accidentally, change random seed
         assert_true("u32", u32_a != u32_b).lift_iofail;;
         pure()
-    }.eval_state_t(random)
+    }.eval_state_t(random.rng_t)
 );
 
 test_random_u16: TestCase;
@@ -46,7 +48,7 @@ test_random_u16 = (
         // If equal accidentally, change random seed
         assert_true("u16", u16_a != u16_b).lift_iofail;;
         pure()
-    }.eval_state_t(random)
+    }.eval_state_t(random.rng_t)
 );
 
 test_random_u8: TestCase;
@@ -60,7 +62,7 @@ test_random_u8 = (
         // If equal accidentally, change random seed
         assert_true("u8", u8_a != u8_b).lift_iofail;;
         pure()
-    }.eval_state_t(random)
+    }.eval_state_t(random.rng_t)
 );
 
 test_random_bytes: TestCase;
@@ -74,7 +76,7 @@ test_random_bytes = (
         // If equal accidentally, change random seed
         assert_true("bytes", bytes_a != bytes_b).lift_iofail;;
         pure()
-    }.eval_state_t(random)
+    }.eval_state_t(random.rng_t)
 );
 
 test_random_array: TestCase;
@@ -92,7 +94,7 @@ test_random_array = (
         // If equal accidentally, change random seed
         assert_true("bytes", bytes_a != bytes_b).lift_iofail;;
         pure()
-    }.eval_state_t(random)
+    }.eval_state_t(random.rng_t)
 );
 
 main: IO ();
