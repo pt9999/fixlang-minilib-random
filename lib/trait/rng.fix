@@ -15,10 +15,14 @@ trait rg: Rng {
     rng_bytes: I64 -> rg -> RngResult rg (rg, Array U8);
 }
 
-// Convert a lens action using PairLT. Useful for containers.
-lens_rng: [f: Functor]
-    ((a -> PairLT r f a) -> (c -> PairLT r f c)) ->
-    ((a -> f (a, r)) -> (c -> f (c, r)));
+// Convert a `rng_xxx` function with a lens action.
+// Useful for implementing the `Rng` trait for a container which contains a member implementing the `Rng` trait.
+// For example, `rng_U64.lens_rng(act_random)` is a `rng_U64` function acting with `act_random`.
+// For details, see the `Container` type in `monad_random_test.fix`.
+// Note that this function somewhat looks like `State::lens_state_t`.
+lens_rng: [rg: Rng, rg2: Rng, f: Functor, RngResult rg a = f a]
+    ((rg -> PairLT a f rg) -> (rg2 -> PairLT a f rg2)) ->
+    ((rg -> f (rg, a)) -> (rg2 -> f (rg2, a)));
 lens_rng = |act, g| act(g >> PairLT::make) >> PairLT::get;
 
 impl Random: Rng {
@@ -27,20 +31,23 @@ impl Random: Rng {
     rng_bytes = |size, random| pure $ random.generate_array(size, generate_U8);
 }
 
+// A monad transformer for `Rng`.
+// This can convert any `Rng` with `Identity` monad to any monad.
 type [m: *->*] RngT rg m = unbox struct {
     data: rg,
 };
 
 namespace RngT {
-    rng_t: [m: *->*] rg -> RngT rg m;
+    // Creates `RngT` from `Rng`.
+    rng_t: [rg: Rng, m: *->*] rg -> RngT rg m;
     rng_t = |rg| RngT { data: rg };
 
-    run_rng_t: [m: *->*] RngT rg m -> rg;
+    // Retrieves `Rng` from `RngT`.
+    run_rng_t: [rg: Rng, m: *->*] RngT rg m -> rg;
     run_rng_t = @data;
 }
 
 impl [rg: Rng, m: Monad,
-      // can accept any functor insted of Identity ?
       RngResult rg (rg, U64) = Identity (rg, U64),
       RngResult rg (rg, Array U8) = Identity (rg, Array U8)
       ] RngT rg m: Rng {
@@ -53,4 +60,7 @@ impl [rg: Rng, m: Monad,
         let (rg, a) = Identity::get $ rgt.run_rng_t.rng_bytes(size);
         pure $ (rng_t(rg), a)
     );
+    // TODO:
+    // Can accept any functor insted of Identity ?
+    // Or extractable functor, which has `extract: f a -> a`?
 }
