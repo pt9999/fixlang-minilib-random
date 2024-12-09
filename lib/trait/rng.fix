@@ -32,8 +32,8 @@ namespace RngT {
     rng_t: [m: *->*] rg -> RngT rg m;
     rng_t = |rg| RngT { data: rg };
 
-    get: [m: *->*] RngT rg m -> rg;
-    get = @data;
+    run_rng_t: [m: *->*] RngT rg m -> rg;
+    run_rng_t = @data;
 }
 
 impl [rg: Rng, m: Monad,
@@ -42,12 +42,12 @@ impl [rg: Rng, m: Monad,
       RngResult rg (rg, Array U8) = Identity (rg, Array U8)
       ] RngT rg m: Rng {
     type RngResult (RngT rg m) a = m a;
-    rng_U64 = |rgf| (
-        let (rg, a) = Identity::get $ rgf.get.rng_U64;
+    rng_U64 = |rgt| (
+        let (rg, a) = Identity::get $ rgt.run_rng_t.rng_U64;
         pure $ (rng_t(rg), a)
     );
-    rng_bytes = |size, rgf| (
-        let (rg, a) = Identity::get $ rgf.get.rng_bytes(size);
+    rng_bytes = |size, rgt| (
+        let (rg, a) = Identity::get $ rgt.run_rng_t.rng_bytes(size);
         pure $ (rng_t(rg), a)
     );
 }
