@@ -2,26 +2,19 @@ module Minilib.Trait.Rng;
 
 import Random;
 import Minilib.Common.RandomEx;
-import Minilib.Crypto.SecureRandom;
 import Minilib.Monad.Identity;
 import Minilib.Monad.State;
 
-trait a: Rng {
-    type RngResult a r;
-    rng_U64: a -> RngResult a (a, U64);
-    rng_bytes: I64 -> a -> RngResult a (a, Array U8);
+trait rg: Rng {
+    type RngResult rg a;
+    rng_U64: rg -> RngResult rg (rg, U64);
+    rng_bytes: I64 -> rg -> RngResult rg (rg, Array U8);
 }
 
 impl Random: Rng {
     type RngResult Random r = Identity r;
     rng_U64 = |random| pure $ random.generate_U64;
     rng_bytes = |size, random| pure $ random.generate_array(size, generate_U8);
-}
-
-impl SecureRandom: Rng {
-    type RngResult SecureRandom r = IOFail r;
-    rng_U64 = SecureRandom::generate_U64;
-    rng_bytes = SecureRandom::generate_bytes;
 }
 
 type [m: *->*] RngT rg m = unbox struct {

@@ -111,7 +111,7 @@ impl Container: Rng {
 
 test_container: TestCase;
 test_container = (
-    make_test("test_random_array") $ |_|
+    make_test("test_container") $ |_|
     let container = Container {
         title: "init",
         random: Random::init_by_seed(123_U64)

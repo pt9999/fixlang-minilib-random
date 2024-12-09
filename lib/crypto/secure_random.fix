@@ -7,6 +7,7 @@ import Minilib.Common.Assert;
 import Minilib.Monad.IO;
 import Minilib.Monad.Random;
 import Minilib.Monad.State;
+import Minilib.Trait.Rng;
 
 type SecureRandom = unbox struct {
     data: Destructor IOHandle
@@ -39,4 +40,10 @@ generate_bytes = |size, secure_random| (
     let bytes = *secure_random.@data.borrow_io(|handle| read_n_bytes(handle, size).to_result).from_io_result;
     pure $ (secure_random, bytes)
 );
+
+impl SecureRandom: Rng {
+    type RngResult SecureRandom r = IOFail r;
+    rng_U64 = SecureRandom::generate_U64;
+    rng_bytes = SecureRandom::generate_bytes;
+}
 

@@ -3,12 +3,8 @@ module Minilib.Monad.Random;
 
 import Random;
 
-import Minilib.Common.RandomEx;
-import Minilib.Crypto.SecureRandom;
 import Minilib.Monad.Identity;
 import Minilib.Monad.State;
-//import Minilib.Monad.Trans;
-//import Minilib.Monad.IO;
 import Minilib.Trait.Rng;
 
 trait MonadRandom = Functor + Monad + MonadRandomIF;
