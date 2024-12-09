@@ -16,6 +16,8 @@ Currently only Linux is supported, because it uses `/dev/urandom` as a secure ra
 
 # Trait implementations
 
+### `impl Minilib.Crypto.SecureRandom::SecureRandom : Minilib.Trait.Rng::Rng`
+
 # Values
 
 ## `namespace Minilib.Crypto.SecureRandom`
