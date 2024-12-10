@@ -28,6 +28,12 @@ A trait for a monad that generates random numbers every time.
 
 ## `namespace Minilib.Monad.Random`
 
+### `random_I64_range : [m : Minilib.Monad.Random::MonadRandom] Std::I64 -> Std::I64 -> m Std::I64`
+
+`random_I64_range(begin, end)` generates a random integer `r`
+such that `begin <= r && r < end`.
+if `begin >= end`, it panicks.
+
 ### `random_U16 : [m : Minilib.Monad.Random::MonadRandom] m Std::U16`
 
 `random_U16` generates a random integer of U8.
@@ -40,10 +46,12 @@ A trait for a monad that generates random numbers every time.
 
 `random_U8` generates a random integer of U8.
 
-### `random_array : [m : Std::Monad] Std::I64 -> m a -> m (Std::Array a)`
+### `random_array : [m : Minilib.Monad.Random::MonadRandom] Std::I64 -> m a -> m (Std::Array a)`
 
 `random_array(size, random)` generates a random array of specified size
 by performing `random` repeatedly.
+
+### `shuffle : [m : Minilib.Monad.Random::MonadRandom] Std::Array a -> m (Std::Array a)`
 
 ## `namespace Minilib.Monad.Random::MonadRandomIF`
 
