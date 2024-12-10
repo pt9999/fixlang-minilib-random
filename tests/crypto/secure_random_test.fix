@@ -4,6 +4,7 @@ import Minilib.Crypto.SecureRandom;
 import Minilib.Monad.Random;
 import Minilib.Monad.State;
 import Minilib.Monad.IO;
+import Minilib.Trait.Rng;
 import Minilib.Testing.UnitTest;
 
 test_generate_U64: TestCase;
@@ -48,12 +49,47 @@ test_monad_random = (
     .eval_state_t(secure_random)
 );
 
+type Container = unbox struct {
+    title: String,
+    secure_random: SecureRandom
+};
+
+impl Container: Rng {
+    type RngResult Container r = IOFail r;
+    rng_U64 = rng_U64.lens_rng(act_secure_random);
+    rng_bytes = |size| rng_bytes(size).lens_rng(act_secure_random);
+}
+
+test_container: TestCase;
+test_container = (
+    make_test("test_container") $ |_|
+    let container = Container {
+        title: "init",
+        secure_random: *SecureRandom::make
+    };
+    let container: Container = *do {
+        mod_state(set_title("started"));;
+        let container: Container = *get_state;
+        assert_equal("title", "started", container.@title).lift_iofail;;
+        let u64_a: U64 = *random_U64;
+        let u64_b: U64 = *random_U64;
+        println("u64:" + (u64_a, u64_b).to_string).lift_io;;
+        // If equal accidentally, change random seed
+        assert_true("u64", u64_a != u64_b).lift_iofail;;
+        mod_state(set_title("finished"));;
+        pure()
+    }.exec_state_t(container);
+    assert_equal("title", "finished", container.@title);;
+    pure()
+);
+
 main: IO ();
 main = (
     [
         test_generate_U64,
         test_generate_bytes,
         test_monad_random,
+        test_container,
         TestCase::empty
     ]
     .run_test_driver

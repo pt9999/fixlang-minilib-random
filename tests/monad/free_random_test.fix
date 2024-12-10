@@ -3,10 +3,12 @@ module FreeRandomTest;
 import Random;
 
 import Minilib.Monad.FunctorM;
+import Minilib.Monad.Identity;
 import Minilib.Monad.Random;
 import Minilib.Monad.FreeRandom;
 import Minilib.Monad.State;
 import Minilib.Monad.IO;
+import Minilib.Trait.Rng;
 import Minilib.Testing.UnitTest;
 
 type Item = unbox struct {
@@ -45,7 +47,7 @@ test_free_random = (
         // If equal accidentally, change random seed
         assert_true("u64", items.@(0).@u64 != items.@(1).@u64).lift_iofail;;
         pure()
-    }.eval_state_t(random)
+    }.eval_state_t(random.rng_t)
 );
 
 main: IO ();

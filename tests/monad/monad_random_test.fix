@@ -2,9 +2,11 @@ module MonadRandomTest;
 
 import Random;
 
+import Minilib.Monad.Identity;
 import Minilib.Monad.Random;
 import Minilib.Monad.State;
 import Minilib.Monad.IO;
+import Minilib.Trait.Rng;
 import Minilib.Testing.UnitTest;
 
 test_random_u64: TestCase;
@@ -18,7 +20,7 @@ test_random_u64 = (
         // If equal accidentally, change random seed
         assert_true("u64", u64_a != u64_b).lift_iofail;;
         pure()
-    }.eval_state_t(random)
+    }.eval_state_t(random.rng_t)
 );
 
 test_random_u32: TestCase;
@@ -32,7 +34,7 @@ test_random_u32 = (
         // If equal accidentally, change random seed
         assert_true("u32", u32_a != u32_b).lift_iofail;;
         pure()
-    }.eval_state_t(random)
+    }.eval_state_t(random.rng_t)
 );
 
 test_random_u16: TestCase;
@@ -46,7 +48,7 @@ test_random_u16 = (
         // If equal accidentally, change random seed
         assert_true("u16", u16_a != u16_b).lift_iofail;;
         pure()
-    }.eval_state_t(random)
+    }.eval_state_t(random.rng_t)
 );
 
 test_random_u8: TestCase;
@@ -60,7 +62,7 @@ test_random_u8 = (
         // If equal accidentally, change random seed
         assert_true("u8", u8_a != u8_b).lift_iofail;;
         pure()
-    }.eval_state_t(random)
+    }.eval_state_t(random.rng_t)
 );
 
 test_random_bytes: TestCase;
@@ -74,7 +76,7 @@ test_random_bytes = (
         // If equal accidentally, change random seed
         assert_true("bytes", bytes_a != bytes_b).lift_iofail;;
         pure()
-    }.eval_state_t(random)
+    }.eval_state_t(random.rng_t)
 );
 
 test_random_array: TestCase;
@@ -92,7 +94,41 @@ test_random_array = (
         // If equal accidentally, change random seed
         assert_true("bytes", bytes_a != bytes_b).lift_iofail;;
         pure()
-    }.eval_state_t(random)
+    }.eval_state_t(random.rng_t)
+);
+
+type Container = unbox struct {
+    title: String,
+    random: Random
+};
+
+impl Container: Rng {
+    type RngResult Container r = Identity r;
+    rng_U64 = rng_U64.lens_rng(act_random);
+    rng_bytes = |size| rng_bytes.lens_rng(act_random);
+}
+
+test_container: TestCase;
+test_container = (
+    make_test("test_container") $ |_|
+    let container = Container {
+        title: "init",
+        random: Random::init_by_seed(123_U64)
+    };
+    let container: Container = *do {
+        mod_state(RngT::mod_data(set_title("started")));;
+        let container: Container = (*get_state).run_rng_t;
+        assert_equal("title", "started", container.@title).lift_iofail;;
+        let u64_a: U64 = *random_U64;
+        let u64_b: U64 = *random_U64;
+        println("u64:" + (u64_a, u64_b).to_string).lift_io;;
+        // If equal accidentally, change random seed
+        assert_true("u64", u64_a != u64_b).lift_iofail;;
+        mod_state(RngT::mod_data(set_title("finished")));;
+        pure()
+    }.exec_state_t(container.rng_t).map(run_rng_t);
+    assert_equal("title", "finished", container.@title);;
+    pure()
 );
 
 main: IO ();
@@ -104,6 +140,7 @@ main = (
         test_random_u8,
         test_random_bytes,
         test_random_array,
+        test_container,
     ]
     .run_test_driver
 );

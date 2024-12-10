@@ -3,11 +3,9 @@ module Minilib.Monad.Random;
 
 import Random;
 
-import Minilib.Common.RandomEx;
-import Minilib.Crypto.SecureRandom;
+import Minilib.Monad.Identity;
 import Minilib.Monad.State;
-import Minilib.Monad.Trans;
-import Minilib.Monad.IO;
+import Minilib.Trait.Rng;
 
 trait MonadRandom = Functor + Monad + MonadRandomIF;
 
@@ -19,23 +17,12 @@ trait [m: * -> *] m: MonadRandomIF {
     random_bytes: I64 -> m (Array U8);
 }
 
-impl [m: Monad] StateT Random m: MonadRandomIF {
-    random_U64 = make_state_t_monad $ |random| (
-        pure $ random.generate_U64
-    );
-    random_bytes = |size| make_state_t_monad $ |random| (
-        pure $ random.generate_array(size, generate_U8)
-    );
-}
-
-// Because of orphan rule, this impl should be defined here
-impl [m: MonadIOFail] StateT SecureRandom m: MonadRandomIF {
-    random_U64 = make_state_t_monad $ |secure_random| (
-        secure_random.generate_U64.lift_iofail
-    );
-    random_bytes = |size| make_state_t_monad $ |secure_random| (
-        secure_random.generate_bytes(size).lift_iofail
-    );
+impl [m: Monad, rng: Rng,
+        RngResult rng (rng, U64) = m (rng, U64),
+        RngResult rng (rng, Array U8) = m (rng, Array U8)]
+    StateT rng m: MonadRandomIF {
+    random_U64 = make_state_t_monad $ rng_U64;
+    random_bytes = |size| make_state_t_monad $ rng_bytes(size);
 }
 
 // `random_U32` generates a random integer of U32.
