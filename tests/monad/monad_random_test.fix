@@ -65,6 +65,26 @@ test_random_u8 = (
     }.eval_state_t(random.rng_t)
 );
 
+test_random_I64_range: TestCase;
+test_random_I64_range = (
+    make_table_test("test_random_I64_range",
+        [
+            (0, 1),
+            (1, 2),
+            (10000, 20000),
+            (I64::minimum, I64::maximum),
+        ],
+        |(begin, end)|
+        let random = Random::init_by_seed(126_U64);
+        do {
+            let i64: I64 = *random_I64_range(begin, end);
+            println("i64_range="+(begin, end, i64).to_string).lift_io;;
+            assert_true("i64", begin <= i64 && i64 < end).lift_iofail;;
+            pure()
+        }.eval_state_t(random.rng_t)
+    )
+);
+
 test_random_bytes: TestCase;
 test_random_bytes = (
     make_test("test_random_bytes") $ |_|
@@ -93,6 +113,20 @@ test_random_array = (
         assert_equal("size", size, bytes_b.get_size).lift_iofail;;
         // If equal accidentally, change random seed
         assert_true("bytes", bytes_a != bytes_b).lift_iofail;;
+        pure()
+    }.eval_state_t(random.rng_t)
+);
+
+test_shuffle: TestCase;
+test_shuffle = (
+    make_test("test_shuffle") $ |_|
+    let random = Random::init_by_seed(128_U64);
+    do {
+        let n = 10;
+        let array = Iterator::range(0, n).to_array;
+        let array = *array.shuffle;
+        println("array:" + array.to_string).lift_io;;
+        assert_equal("size", n, array.get_size).lift_iofail;;
         pure()
     }.eval_state_t(random.rng_t)
 );
@@ -138,8 +172,10 @@ main = (
         test_random_u32,
         test_random_u16,
         test_random_u8,
+        test_random_I64_range,
         test_random_bytes,
         test_random_array,
+        test_shuffle,
         test_container,
     ]
     .run_test_driver
