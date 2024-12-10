@@ -50,14 +50,46 @@ random_U16 = random_U64.map(to_U16);
 random_U8: [m: MonadRandom] m U8;
 random_U8 = random_U64.map(to_U8);
 
+// `random_I64_range(begin, end)` generates a random integer `r`
+// such that `begin <= r && r < end`.
+// if `begin >= end`, it panicks.
+random_I64_range: [m: MonadRandom] I64 -> I64 -> m I64;
+random_I64_range = |begin, end| (
+    if !(begin < end) { undefined("random_I64_range: begin >= end") };
+    let n = (end - begin).to_U64;
+    let r = *random_U64;
+    let r = r / (U64::maximum / n);
+    if r >= n {
+        random_I64_range(begin, end)  // try again
+    };
+    let r = r.to_I64 + begin;
+    pure $ r
+);
+
 // `random_array(size, random)` generates a random array of specified size
 // by performing `random` repeatedly.
-random_array: [m: Monad] I64 -> m a -> m (Array a);
+random_array: [m: MonadRandom] I64 -> m a -> m (Array a);
 random_array = |size, random| (
     loop_m(
         (Array::empty(size), 0), |(array, i)|
         if i >= size { break_m $ array };
         let array = array.push_back(*random);
         continue_m $ (array, i + 1)
+    )
+);
+
+shuffle: [m: MonadRandom] Array a -> m (Array a);
+shuffle = |array| (
+    loop_m(
+        (array, array.get_size - 1), |(array, i)|
+        if i <= 0 {
+            break_m $ (array)
+        };
+        let j = *random_U64;
+        let j = (j % (i + 1).to_U64).to_I64;
+        let tmp = array.@(i);
+        let array = array.set(i, array.@(j));
+        let array = array.set(j, tmp);
+        continue_m $ (array, i - 1)
     )
 );
