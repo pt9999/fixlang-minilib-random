@@ -138,7 +138,7 @@ type Container = unbox struct {
 
 impl Container: Rng {
     type RngResult Container a = Identity a;
-    type RngLift Container m = RngLiftImpl Identity m;
+    type RngLift Container m a = RngLiftImpl Identity m a;
     rng_U64 = rng_U64.lens_rng(act_random);
     rng_bytes = |size| rng_bytes.lens_rng(act_random);
 }

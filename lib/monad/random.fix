@@ -35,12 +35,13 @@ act1 = |rng: rg| (
         );
 */
 
-impl [rg: Rng, lf: RngLift,
-    RngLift rg m = lf,
+impl [rg: Rng,
+    lf1: RngLift,
+    RngLift rg m (rg, U64) = lf1,
+    RngResult rg (rg, U64) = from1,
+    RngLiftFrom lf1 = from1,
+    RngLiftTo lf1 = m (rg, U64),
     /*
-    RngLiftFrom lf (rg, U64) = resu64,
-    RngResult rg (rg, U64) = resu64,
-    RngLiftTo lf (rg, U64) = m (rg, U64),
     RngLiftFrom lf (rg, Array U8) = resbytes,
     RngResult rg (rg, Array U8) = resbytes,
     RngLiftTo lf (rg, Array U8) = m (rg, Array U8)
@@ -49,7 +50,16 @@ impl [rg: Rng, lf: RngLift,
     ]
     StateT rg m: MonadRandomIF {
     random_U64 = (
-        let lif: lf -> RngLiftFrom lf (rg, U64) -> RngLiftTo lf (rg, U64) = rng_lift;
+        //let lif: lf1 -> RngLiftFrom lf1 -> RngLiftTo lf1 = rng_lift;
+        //let lif: RngLiftFrom lf1 -> RngLiftTo lf1 = rng_lift(rng_lift_instance: lf1);
+        let act1: rg -> RngLiftTo lf1 = |rng: rg| (
+            let res: RngResult rg (rg, U64) = rng_U64(rng);
+            //let lif: RngLiftFrom lf (rg, U64) -> RngLiftTo lf (rg, U64) = rng_lift(rng_lift_instance: lf);
+            let res: RngLiftTo lf1 =
+                (RngLift::rng_lift: lf1 -> RngLiftFrom lf1 -> RngLiftTo lf1)
+                (rng_lift_instance: lf1, res);
+            res //undefined("") //res
+        );
         undefined("")
     );
         /*
