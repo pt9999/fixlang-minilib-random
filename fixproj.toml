@@ -19,9 +19,9 @@ files = [
 opt_level = "separated"
 files = [
     "tests/test.fix",
-#    "tests/common/random_ex_test.fix",
-#    "tests/crypto/secure_random_test.fix",
-#    "tests/monad/free_random_test.fix",
+    "tests/common/random_ex_test.fix",
+    "tests/crypto/secure_random_test.fix",
+    "tests/monad/free_random_test.fix",
     "tests/monad/monad_random_test.fix",
 ]
 
