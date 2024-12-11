@@ -20,7 +20,7 @@ test_random_u64 = (
         // If equal accidentally, change random seed
         assert_true("u64", u64_a != u64_b).lift_iofail;;
         pure()
-    }.eval_state_t(random.rng_t)
+    }.eval_state_t(random)
 );
 
 test_random_u32: TestCase;
@@ -34,7 +34,7 @@ test_random_u32 = (
         // If equal accidentally, change random seed
         assert_true("u32", u32_a != u32_b).lift_iofail;;
         pure()
-    }.eval_state_t(random.rng_t)
+    }.eval_state_t(random)
 );
 
 test_random_u16: TestCase;
@@ -48,7 +48,7 @@ test_random_u16 = (
         // If equal accidentally, change random seed
         assert_true("u16", u16_a != u16_b).lift_iofail;;
         pure()
-    }.eval_state_t(random.rng_t)
+    }.eval_state_t(random)
 );
 
 test_random_u8: TestCase;
@@ -62,7 +62,7 @@ test_random_u8 = (
         // If equal accidentally, change random seed
         assert_true("u8", u8_a != u8_b).lift_iofail;;
         pure()
-    }.eval_state_t(random.rng_t)
+    }.eval_state_t(random)
 );
 
 test_random_I64_range: TestCase;
@@ -81,7 +81,7 @@ test_random_I64_range = (
             println("i64_range="+(begin, end, i64).to_string).lift_io;;
             assert_true("i64", begin <= i64 && i64 < end).lift_iofail;;
             pure()
-        }.eval_state_t(random.rng_t)
+        }.eval_state_t(random)
     )
 );
 
@@ -96,7 +96,7 @@ test_random_bytes = (
         // If equal accidentally, change random seed
         assert_true("bytes", bytes_a != bytes_b).lift_iofail;;
         pure()
-    }.eval_state_t(random.rng_t)
+    }.eval_state_t(random)
 );
 
 test_random_array: TestCase;
@@ -114,7 +114,7 @@ test_random_array = (
         // If equal accidentally, change random seed
         assert_true("bytes", bytes_a != bytes_b).lift_iofail;;
         pure()
-    }.eval_state_t(random.rng_t)
+    }.eval_state_t(random)
 );
 
 test_shuffle: TestCase;
@@ -128,7 +128,7 @@ test_shuffle = (
         println("array:" + array.to_string).lift_io;;
         assert_equal("size", n, array.get_size).lift_iofail;;
         pure()
-    }.eval_state_t(random.rng_t)
+    }.eval_state_t(random)
 );
 
 type Container = unbox struct {
@@ -160,7 +160,7 @@ test_container = (
         assert_true("u64", u64_a != u64_b).lift_iofail;;
         mod_state(RngT::mod_data(set_title("finished")));;
         pure()
-    }.exec_state_t(container.rng_t).map(run_rng_t);
+    }.exec_state_t(container).map(run_rng_t);
     assert_equal("title", "finished", container.@title);;
     pure()
 );

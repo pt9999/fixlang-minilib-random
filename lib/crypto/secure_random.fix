@@ -42,8 +42,13 @@ generate_bytes = |size, secure_random| (
 );
 
 impl SecureRandom: Rng {
-    type RngResult SecureRandom r = IOFail r;
-    rng_U64 = SecureRandom::generate_U64;
-    rng_bytes = SecureRandom::generate_bytes;
+    type RngImplType SecureRandom m = RngImpl SecureRandom m;
 }
 
+impl [m: MonadIOFail] RngImpl SecureRandom m: RngImplIF {
+    type RngType (RngImpl SecureRandom m) = SecureRandom;
+    type RngResult (RngImpl SecureRandom m) a = m a;
+    rgi_instance = RngImpl{};
+    rng_U64 = |rgi| SecureRandom::generate_U64 >> lift_iofail;
+    rng_bytes = |rgi| SecureRandom::generate_bytes >> lift_iofail;
+}

@@ -8,59 +8,30 @@ import Minilib.Monad.State;
 
 // A trait for Random Number Generator.
 trait rg: Rng {
-    type RngResult rg a;
-    // Generates a random integer of U64.
-    rng_U64: rg -> RngResult rg (rg, U64);
-    // Generates random bytes of specified size.
-    rng_bytes: I64 -> rg -> RngResult rg (rg, Array U8);
+    type [m: * -> *] RngImplType rg m;
 }
 
-// Convert a `rng_xxx` function with a lens action.
-// Useful for implementing the `Rng` trait for a container which contains a member implementing the `Rng` trait.
-// For example, `rng_U64.lens_rng(act_random)` is a `rng_U64` function acting with `act_random`.
-// For details, see the `Container` type in `monad_random_test.fix`.
-// Note that this function somewhat looks like `State::lens_state_t`.
-lens_rng: [rg: Rng, rg2: Rng, f: Functor, RngResult rg a = f a]
-    ((rg -> PairLT a f rg) -> (rg2 -> PairLT a f rg2)) ->
-    ((rg -> f (rg, a)) -> (rg2 -> f (rg2, a)));
-lens_rng = |act, g| act(g >> PairLT::make) >> PairLT::get;
+// A trait for Implementation of Random Number Generator.
+trait rgi: RngImplIF {
+    type RngType rgi;
+    type RngResult rgi a;
+    rgi_instance: rgi;
+    // Generates a random integer of U64.
+    rng_U64: rgi -> rg -> RngResult rgi (RngType rgi, U64);
+    // Generates random bytes of specified size.
+    rng_bytes: rgi -> I64 -> rg -> RngResult rgi (RngType rgi, Array U8);
+}
+
+type [m: * -> *] RngImpl rg m a = unbox struct {};
 
 impl Random: Rng {
-    type RngResult Random r = Identity r;
-    rng_U64 = |random| pure $ random.generate_U64;
-    rng_bytes = |size, random| pure $ random.generate_array(size, generate_U8);
+    type RngImplType Random m = RngImpl Random m;
 }
 
-// A monad transformer for `Rng`.
-// This can convert any `Rng` with `Identity` monad to any monad.
-type [m: *->*] RngT rg m = unbox struct {
-    data: rg,
-};
-
-namespace RngT {
-    // Creates `RngT` from `Rng`.
-    rng_t: [rg: Rng, m: *->*] rg -> RngT rg m;
-    rng_t = |rg| RngT { data: rg };
-
-    // Retrieves `Rng` from `RngT`.
-    run_rng_t: [rg: Rng, m: *->*] RngT rg m -> rg;
-    run_rng_t = @data;
-}
-
-impl [rg: Rng, m: Monad,
-      RngResult rg (rg, U64) = Identity (rg, U64),
-      RngResult rg (rg, Array U8) = Identity (rg, Array U8)
-      ] RngT rg m: Rng {
-    type RngResult (RngT rg m) a = m a;
-    rng_U64 = |rgt| (
-        let (rg, a) = Identity::get $ rgt.run_rng_t.rng_U64;
-        pure $ (rng_t(rg), a)
-    );
-    rng_bytes = |size, rgt| (
-        let (rg, a) = Identity::get $ rgt.run_rng_t.rng_bytes(size);
-        pure $ (rng_t(rg), a)
-    );
-    // TODO:
-    // Can accept any functor insted of Identity ?
-    // Or extractable functor, which has `extract: f a -> a`?
-}
+impl [m: Monad] RngImpl Random m: RngImplIF {
+    type RngType (RngImpl Random m) = Random;
+    type RngResult (RngImpl Random m) a = m a;
+    rgi_instance = RngImpl{};
+    rng_U64 = |rgi, random| pure $ random.generate_U64;
+    rng_bytes = |rgi, size, random| pure $ random.generate_array(size, generate_U8);
+} 
