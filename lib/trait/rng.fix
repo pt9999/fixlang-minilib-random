@@ -10,13 +10,22 @@ import Minilib.Monad.IO;
 // A trait for Random Number Generator.
 trait rg: Rng {
     type RngResult rg a;
-    type [m: * -> *] RngLift rg m a;
+    type [m: * -> *] RngLift rg m;
     // Generates a random integer of U64.
     rng_U64: rg -> RngResult rg (rg, U64);
     // Generates random bytes of specified size.
     rng_bytes: I64 -> rg -> RngResult rg (rg, Array U8);
 }
 
+// Convert a `rng_xxx` function with a lens action.
+// Useful for implementing the `Rng` trait for a container which contains a member implementing the `Rng` trait.
+// For example, `rng_U64.lens_rng(act_random)` is a `rng_U64` function acting with `act_random`.
+// For details, see the `Container` type in `monad_random_test.fix`.
+// Note that this function somewhat looks like `State::lens_state_t`.
+lens_rng: [rg: Rng, rg2: Rng, f: Functor, RngResult rg a = f a]
+    ((rg -> PairLT a f rg) -> (rg2 -> PairLT a f rg2)) ->
+    ((rg -> f (rg, a)) -> (rg2 -> f (rg2, a)));
+lens_rng = |act, g| act(g >> PairLT::make) >> PairLT::get;
 
 //--------------------------------------------------
 // A trait for lift result of Random Number Generator.
@@ -27,14 +36,14 @@ trait lf: RngLift {
     rng_lift: lf -> (RngLiftFrom lf a) -> (RngLiftTo lf a);
 }
 
-type [m: * -> *] RngLiftImpl rg m a = unbox struct {};
+type [n: * -> *, m: * -> *] RngLiftImpl n m = unbox struct {};
 
 impl [m: Monad] RngLiftImpl Identity m: RngLift {
     type RngLiftFrom (RngLiftImpl Identity m) a = Identity a;
     type RngLiftTo (RngLiftImpl Identity m) a = m a;
     rng_lift_instance = RngLiftImpl{};
     rng_lift = |_| Identity::get >> pure;
-} 
+}
 
 impl [m: MonadIOFail] RngLiftImpl IOFail m: RngLift {
     type RngLiftFrom (RngLiftImpl IOFail m) a = IOFail a;
@@ -47,7 +56,7 @@ impl [m: MonadIOFail] RngLiftImpl IOFail m: RngLift {
 
 impl Random: Rng {
     type RngResult Random a = Identity a;
-    type RngLift Random m a = RngLiftImpl Identity m a;
+    type RngLift Random m = RngLiftImpl Identity m;
     rng_U64 = |random| pure $ random.generate_U64;
     rng_bytes = |size, random| pure $ random.generate_array(size, generate_U8);
 }

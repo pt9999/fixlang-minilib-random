@@ -138,7 +138,7 @@ type Container = unbox struct {
 
 impl Container: Rng {
     type RngResult Container a = Identity a;
-    type RngLift Container m a = RngLiftImpl Identity m a;
+    type RngLift Container m = RngLiftImpl Identity m;
     rng_U64 = rng_U64.lens_rng(act_random);
     rng_bytes = |size| rng_bytes.lens_rng(act_random);
 }
@@ -151,17 +151,17 @@ test_container = (
         random: Random::init_by_seed(123_U64)
     };
     let container: Container = *do {
-        mod_state(RngT::mod_data(set_title("started")));;
-        let container: Container = (*get_state).run_rng_t;
+        mod_state(set_title("started"));;
+        let container: Container = *get_state;
         assert_equal("title", "started", container.@title).lift_iofail;;
         let u64_a: U64 = *random_U64;
         let u64_b: U64 = *random_U64;
         println("u64:" + (u64_a, u64_b).to_string).lift_io;;
         // If equal accidentally, change random seed
         assert_true("u64", u64_a != u64_b).lift_iofail;;
-        mod_state(RngT::mod_data(set_title("finished")));;
+        mod_state(set_title("finished"));;
         pure()
-    }.exec_state_t(container).map(run_rng_t);
+    }.exec_state_t(container);
     assert_equal("title", "finished", container.@title);;
     pure()
 );
