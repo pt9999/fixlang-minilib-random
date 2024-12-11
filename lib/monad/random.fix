@@ -35,18 +35,13 @@ impl [rg: Rng,
     ]
     StateT rg m: MonadRandomIF {
     random_U64 = (
-        /*
-        //let lif: lf1 -> LiftFrom lf1 -> LiftTo lf1 = rng_lift;
-        //let lif: LiftFrom lf1 -> LiftTo lf1 = rng_lift(rng_lift_instance: lf1);
-        let act1: rg -> LiftTo lf1 = |rng: rg| (
+        let act: rg -> m (rg, U64) = |rng: rg| (
             let res: RngResult rg (rg, U64) = rng_U64(rng);
-            //let lif: LiftFrom lf (rg, U64) -> LiftTo lf (rg, U64) = rng_lift(rng_lift_instance: lf);
-            let lifter_: LiftFrom lf1 -> lf1 -> LiftTo lf1 = lifter;
-            let res: LiftTo lf1 = lifter_.lift_from(res);
-            res //undefined("") //res
+            let lifter_ = (lifter: RngLift rg m (rg, U64));
+            let res: m (rg, U64) = lifter_.lift_from(res);
+            res
         );
-        */
-        undefined("")
+        make_state_t_monad $ act
     );
         /*
         let act1: rg -> LiftTo lf (rg, U64) = |rng: rg| (
