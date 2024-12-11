@@ -47,7 +47,7 @@ test_free_random = (
         // If equal accidentally, change random seed
         assert_true("u64", items.@(0).@u64 != items.@(1).@u64).lift_iofail;;
         pure()
-    }.eval_state_t(random.rng_t)
+    }.eval_state_t(random)
 );
 
 main: IO ();

@@ -17,11 +17,62 @@ trait [m: * -> *] m: MonadRandomIF {
     random_bytes: I64 -> m (Array U8);
 }
 
-impl [m: Monad, rg: Rng, lf: RngLift,
-    RngLift rg m = lf]
+/*
+act1: [m: Monad, rg: Rng, lf: RngLift,
+    RngLift rg m = lf,
+    RngLiftFrom lf (rg, U64) = resu64,
+    RngResult rg (rg, U64) = resu64,
+    RngLiftTo lf (rg, U64) = m (rg, U64),
+    RngLiftFrom lf (rg, Array U8) = resbytes,
+    RngResult rg (rg, Array U8) = resbytes,
+    RngLiftTo lf (rg, Array U8) = m (rg, Array U8)
+    ]
+    rg -> RngLiftTo lf (rg, U64);
+act1 = |rng: rg| (
+            let res: RngResult rg (rg, U64) = rng_U64(rng);
+            let res: RngLiftTo lf (rg, U64) = rng_lift(rng_lift_instance: lf)(res);
+            res
+        );
+*/
+
+impl [rg: Rng, lf: RngLift,
+    RngLift rg m = lf,
+    /*
+    RngLiftFrom lf (rg, U64) = resu64,
+    RngResult rg (rg, U64) = resu64,
+    RngLiftTo lf (rg, U64) = m (rg, U64),
+    RngLiftFrom lf (rg, Array U8) = resbytes,
+    RngResult rg (rg, Array U8) = resbytes,
+    RngLiftTo lf (rg, Array U8) = m (rg, Array U8)
+    */
+    m: Monad
+    ]
     StateT rg m: MonadRandomIF {
-    random_U64 = make_state_t_monad $ rng_U64 >> rng_lift(rng_lift_instance);
-    random_bytes = |size| make_state_t_monad $ rng_bytes(size) >> rng_lift(rng_lift_instance);
+    random_U64 = (
+        let lif: lf -> RngLiftFrom lf (rg, U64) -> RngLiftTo lf (rg, U64) = rng_lift;
+        undefined("")
+    );
+        /*
+        let act1: rg -> RngLiftTo lf (rg, U64) = |rng: rg| (
+            let res: RngResult rg (rg, U64) = rng_U64(rng);
+            //let lif: RngLiftFrom lf (rg, U64) -> RngLiftTo lf (rg, U64) = rng_lift(rng_lift_instance: lf);
+            //let res: RngLiftTo lf (rg, U64) = rng_lift(rng_lift_instance: lf)(res);
+            undefined("") //res
+        );
+        */
+        /*
+
+        let act: rg -> RngLiftTo lf (rg, U64)
+        = |rng: rg| (
+            let res: RngResult rg (rg, U64) = rng_U64(rng);
+            let res: RngLiftTo lf (rg, U64) = rng_lift(rng_lift_instance: lf)(res);
+            res
+        );
+        let act: rg -> m (rg, U64) = act;
+        make_state_t_monad $ act
+        */
+    //random_bytes = |size| make_state_t_monad $ rng_bytes(size) >> rng_lift(rng_lift_instance: lf);
+    random_bytes = undefined("");
 }
 
 // `random_U32` generates a random integer of U32.

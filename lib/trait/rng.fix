@@ -33,7 +33,7 @@ trait lf: RngLift {
     type RngLiftFrom lf a;
     type RngLiftTo lf a;
     rng_lift_instance: lf;
-    rng_lift: lf -> (RngLiftFrom lf a) -> (RngLiftTo lf a);
+    rng_lift: lf -> (RngLiftFrom lf b) -> (RngLiftTo lf b);
 }
 
 type [n: * -> *, m: * -> *] RngLiftImpl n m = unbox struct {};
