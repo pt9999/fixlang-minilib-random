@@ -8,6 +8,7 @@ import Minilib.Monad.IO;
 import Minilib.Monad.Random;
 import Minilib.Monad.State;
 import Minilib.Trait.Rng;
+import Minilib.Trait.Lifter;
 
 type SecureRandom = unbox struct {
     data: Destructor IOHandle
@@ -43,7 +44,7 @@ generate_bytes = |size, secure_random| (
 
 impl SecureRandom: Rng {
     type RngResult SecureRandom r = IOFail r;
-    type RngLift SecureRandom m a = RngLiftImpl IOFail m a;
+    type RngLift SecureRandom m a = Lifter (IOFail a) (m a);
     rng_U64 = SecureRandom::generate_U64;
     rng_bytes = SecureRandom::generate_bytes;
 }

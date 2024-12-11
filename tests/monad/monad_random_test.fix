@@ -7,6 +7,7 @@ import Minilib.Monad.Random;
 import Minilib.Monad.State;
 import Minilib.Monad.IO;
 import Minilib.Trait.Rng;
+import Minilib.Trait.Lifter;
 import Minilib.Testing.UnitTest;
 
 test_random_u64: TestCase;
@@ -138,7 +139,7 @@ type Container = unbox struct {
 
 impl Container: Rng {
     type RngResult Container a = Identity a;
-    type RngLift Container m a = RngLiftImpl Identity m a;
+    type RngLift Container m a = Lifter (Identity a) (m a);
     rng_U64 = rng_U64.lens_rng(act_random);
     rng_bytes = |size| rng_bytes.lens_rng(act_random);
 }

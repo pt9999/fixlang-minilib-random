@@ -6,6 +6,7 @@ import Minilib.Functor.Pair;
 import Minilib.Monad.Identity;
 import Minilib.Monad.State;
 import Minilib.Monad.IO;
+import Minilib.Trait.Lifter;
 
 // A trait for Random Number Generator.
 trait rg: Rng {
@@ -28,35 +29,10 @@ lens_rng: [rg: Rng, rg2: Rng, f: Functor, RngResult rg a = f a]
 lens_rng = |act, g| act(g >> PairLT::make) >> PairLT::get;
 
 //--------------------------------------------------
-// A trait for lift result of Random Number Generator.
-trait lf: RngLift {
-    type RngLiftFrom lf;
-    type RngLiftTo lf;
-    rng_lift_instance: lf;
-    rng_lift: lf -> (RngLiftFrom lf) -> (RngLiftTo lf);
-}
-
-type [n: * -> *, m: * -> *] RngLiftImpl n m a = unbox struct {};
-
-impl [m: Monad] RngLiftImpl Identity m a: RngLift {
-    type RngLiftFrom (RngLiftImpl Identity m a) = Identity a;
-    type RngLiftTo (RngLiftImpl Identity m a) = m a;
-    rng_lift_instance = RngLiftImpl{};
-    rng_lift = |_| Identity::get >> pure;
-}
-
-impl [m: MonadIOFail] RngLiftImpl IOFail m a: RngLift {
-    type RngLiftFrom (RngLiftImpl IOFail m a) = IOFail a;
-    type RngLiftTo (RngLiftImpl IOFail m a) = m a;
-    rng_lift_instance = RngLiftImpl{};
-    rng_lift = |_| lift_iofail;
-}
-
-//--------------------------------------------------
 
 impl Random: Rng {
     type RngResult Random a = Identity a;
-    type RngLift Random m a = RngLiftImpl Identity m a;
+    type RngLift Random m a = Lifter (Identity a) (m a);
     rng_U64 = |random| pure $ random.generate_U64;
     rng_bytes = |size, random| pure $ random.generate_array(size, generate_U8);
 }

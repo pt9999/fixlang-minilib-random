@@ -6,6 +6,7 @@ import Random;
 import Minilib.Monad.Identity;
 import Minilib.Monad.State;
 import Minilib.Trait.Rng;
+import Minilib.Trait.Lifter;
 
 trait MonadRandom = Functor + Monad + MonadRandomIF;
 
@@ -17,65 +18,50 @@ trait [m: * -> *] m: MonadRandomIF {
     random_bytes: I64 -> m (Array U8);
 }
 
-/*
-act1: [m: Monad, rg: Rng, lf: RngLift,
-    RngLift rg m = lf,
-    RngLiftFrom lf (rg, U64) = resu64,
-    RngResult rg (rg, U64) = resu64,
-    RngLiftTo lf (rg, U64) = m (rg, U64),
-    RngLiftFrom lf (rg, Array U8) = resbytes,
-    RngResult rg (rg, Array U8) = resbytes,
-    RngLiftTo lf (rg, Array U8) = m (rg, Array U8)
-    ]
-    rg -> RngLiftTo lf (rg, U64);
-act1 = |rng: rg| (
-            let res: RngResult rg (rg, U64) = rng_U64(rng);
-            let res: RngLiftTo lf (rg, U64) = rng_lift(rng_lift_instance: lf)(res);
-            res
-        );
-*/
 
 impl [rg: Rng,
-    lf1: RngLift,
+    lf1: Lift,
     RngLift rg m (rg, U64) = lf1,
+    //Lifter (RngResult rg (rg, U64)) (m (rg, U64)) = lf1,
     RngResult rg (rg, U64) = from1,
-    RngLiftFrom lf1 = from1,
-    RngLiftTo lf1 = m (rg, U64),
+    LiftFrom lf1 = from1,
+    LiftTo lf1 = m (rg, U64),
     /*
-    RngLiftFrom lf (rg, Array U8) = resbytes,
+    LiftFrom lf (rg, Array U8) = resbytes,
     RngResult rg (rg, Array U8) = resbytes,
-    RngLiftTo lf (rg, Array U8) = m (rg, Array U8)
+    LiftTo lf (rg, Array U8) = m (rg, Array U8)
     */
     m: Monad
     ]
     StateT rg m: MonadRandomIF {
     random_U64 = (
-        //let lif: lf1 -> RngLiftFrom lf1 -> RngLiftTo lf1 = rng_lift;
-        //let lif: RngLiftFrom lf1 -> RngLiftTo lf1 = rng_lift(rng_lift_instance: lf1);
-        let act1: rg -> RngLiftTo lf1 = |rng: rg| (
+        /*
+        //let lif: lf1 -> LiftFrom lf1 -> LiftTo lf1 = rng_lift;
+        //let lif: LiftFrom lf1 -> LiftTo lf1 = rng_lift(rng_lift_instance: lf1);
+        let act1: rg -> LiftTo lf1 = |rng: rg| (
             let res: RngResult rg (rg, U64) = rng_U64(rng);
-            //let lif: RngLiftFrom lf (rg, U64) -> RngLiftTo lf (rg, U64) = rng_lift(rng_lift_instance: lf);
-            let res: RngLiftTo lf1 =
-                (RngLift::rng_lift: lf1 -> RngLiftFrom lf1 -> RngLiftTo lf1)
-                (rng_lift_instance: lf1, res);
+            //let lif: LiftFrom lf (rg, U64) -> LiftTo lf (rg, U64) = rng_lift(rng_lift_instance: lf);
+            let lifter_: LiftFrom lf1 -> lf1 -> LiftTo lf1 = lifter;
+            let res: LiftTo lf1 = lifter_.lift_from(res);
             res //undefined("") //res
         );
+        */
         undefined("")
     );
         /*
-        let act1: rg -> RngLiftTo lf (rg, U64) = |rng: rg| (
+        let act1: rg -> LiftTo lf (rg, U64) = |rng: rg| (
             let res: RngResult rg (rg, U64) = rng_U64(rng);
-            //let lif: RngLiftFrom lf (rg, U64) -> RngLiftTo lf (rg, U64) = rng_lift(rng_lift_instance: lf);
-            //let res: RngLiftTo lf (rg, U64) = rng_lift(rng_lift_instance: lf)(res);
+            //let lif: LiftFrom lf (rg, U64) -> LiftTo lf (rg, U64) = rng_lift(rng_lift_instance: lf);
+            //let res: LiftTo lf (rg, U64) = rng_lift(rng_lift_instance: lf)(res);
             undefined("") //res
         );
         */
         /*
 
-        let act: rg -> RngLiftTo lf (rg, U64)
+        let act: rg -> LiftTo lf (rg, U64)
         = |rng: rg| (
             let res: RngResult rg (rg, U64) = rng_U64(rng);
-            let res: RngLiftTo lf (rg, U64) = rng_lift(rng_lift_instance: lf)(res);
+            let res: LiftTo lf (rg, U64) = rng_lift(rng_lift_instance: lf)(res);
             res
         );
         let act: rg -> m (rg, U64) = act;
