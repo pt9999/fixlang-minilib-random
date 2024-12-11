@@ -8,30 +8,46 @@ import Minilib.Monad.State;
 
 // A trait for Random Number Generator.
 trait rg: Rng {
-    type [m: * -> *] RngImplType rg m;
-}
-
-// A trait for Implementation of Random Number Generator.
-trait rgi: RngImplIF {
-    type RngType rgi;
-    type RngResult rgi a;
-    rgi_instance: rgi;
+    type RngResult rg a;
+    type [m: * -> *] RngLift rg m a;
     // Generates a random integer of U64.
-    rng_U64: rgi -> rg -> RngResult rgi (RngType rgi, U64);
+    rng_U64: rg -> RngResult rg (rg, U64);
     // Generates random bytes of specified size.
-    rng_bytes: rgi -> I64 -> rg -> RngResult rgi (RngType rgi, Array U8);
+    rng_bytes: I64 -> rg -> RngResult rg (rg, Array U8);
 }
 
-type [m: * -> *] RngImpl rg m a = unbox struct {};
+
+//--------------------------------------------------
+// A trait for lift result of Random Number Generator.
+trait lf: RngLift {
+    type RngLiftFrom lf a;
+    type RngLiftTo lf a;
+    rng_lift_instance: lf;
+    rng_lift: lf -> (RngLiftFrom lf a) -> (RngLiftTo lf a);
+}
+
+type [m: * -> *] RngLiftImpl rg m a = unbox struct {};
+
+impl [m: Monad] RngLiftImpl Identity m: RngLift {
+    type RngLiftFrom (RngLiftImpl Identity m) a = Identity a;
+    type RngLiftTo (RngLiftImpl Identity m) a = m a;
+    rng_lift_instance = RngLiftImpl{};
+    rng_lift = |_| Identity::get >> pure;
+} 
+
+impl [m: MonadIOFail] RngLiftImpl IOFail m: RngLift {
+    type RngLiftFrom (RngLiftImpl IOFail m) a = IOFail a;
+    type RngLiftTo (RngLiftImpl IOFail m) a = m a;
+    rng_lift_instance = RngLiftImpl{};
+    rng_lift = |_| lift_iofail;
+}
+
+//--------------------------------------------------
 
 impl Random: Rng {
-    type RngImplType Random m = RngImpl Random m;
+    type RngResult Random a = Identity a;
+    type RngLift Random m a = RngLiftImpl Random m a;
+    rng_U64 = |random| pure $ random.generate_U64;
+    rng_bytes = |size, random| pure $ random.generate_array(size, generate_U8);
 }
 
-impl [m: Monad] RngImpl Random m: RngImplIF {
-    type RngType (RngImpl Random m) = Random;
-    type RngResult (RngImpl Random m) a = m a;
-    rgi_instance = RngImpl{};
-    rng_U64 = |rgi, random| pure $ random.generate_U64;
-    rng_bytes = |rgi, size, random| pure $ random.generate_array(size, generate_U8);
-} 
