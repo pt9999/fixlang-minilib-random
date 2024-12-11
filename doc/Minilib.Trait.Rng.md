@@ -12,7 +12,8 @@ A trait for Random Number Generator.
 
 #### associated type `RngResult rg a`
 
-The result type of `rng_xxx` functions. This must be a monad.
+The result type of `rng_xxx` functions. This should be a monad, for example `Identity a`, `IOFail a` etc.
+This result will be lifted by the lifter.
 
 #### associated type `[m : *->*] RngLift rg m a`
 

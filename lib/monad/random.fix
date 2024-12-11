@@ -18,7 +18,8 @@ trait [m: * -> *] m: MonadRandomIF {
     random_bytes: I64 -> m (Array U8);
 }
 
-
+// An implementation of `MonadRandomIF` for the `StateT` monad.
+// The result type of `Rng` is lifted to the target monad `m` by the lifter.
 impl [
         rg: Rng,
         lf1: Lifter,

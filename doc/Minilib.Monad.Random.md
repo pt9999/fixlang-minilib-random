@@ -24,6 +24,9 @@ A trait for a monad that generates random numbers every time.
 
 ### `impl [rg : Minilib.Trait.Rng::Rng, lf1 : Minilib.Trait.Lifter::Lifter, lf2 : Minilib.Trait.Lifter::Lifter, m : Std::Monad] Minilib.Monad.State::StateT rg m : Minilib.Monad.Random::MonadRandomIF`
 
+An implementation of `MonadRandomIF` for the `StateT` monad.
+The result type of `Rng` is lifted to the target monad `m` by the lifter.
+
 # Values
 
 ## `namespace Minilib.Monad.Random`
