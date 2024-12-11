@@ -19,28 +19,28 @@ trait [m: * -> *] m: MonadRandomIF {
 }
 
 
-impl [rg: Rng,
-    lf1: Lifter,
-    RngLift rg m (rg, U64) = lf1,
-    RngResult rg (rg, U64) = from1,
-    LiftFrom lf1 = from1,
-    LiftTo lf1 = m (rg, U64),
-    lf2: Lifter,
-    RngLift rg m (rg, Array U8) = lf2,
-    RngResult rg (rg, Array U8) = from2,
-    LiftFrom lf2 = from2,
-    LiftTo lf2 = m (rg, Array U8),
-    m: Monad
+impl [
+        rg: Rng,
+        lf1: Lifter,
+        RngLift rg m (rg, U64) = lf1,
+        RngResult rg (rg, U64) = from1,
+        LiftFrom lf1 = from1,
+        LiftTo lf1 = m (rg, U64),
+        lf2: Lifter,
+        RngLift rg m (rg, Array U8) = lf2,
+        RngResult rg (rg, Array U8) = from2,
+        LiftFrom lf2 = from2,
+        LiftTo lf2 = m (rg, Array U8),
+        m: Monad
     ]
     StateT rg m: MonadRandomIF {
     random_U64 = (
-        let act: rg -> m (rg, U64) = |rng: rg| (
+        make_state_t_monad $ |rng: rg| (
             let res: RngResult rg (rg, U64) = rng_U64(rng);
             let lifter_ = (Lifter::lifter: RngLift rg m (rg, U64));
             let res: m (rg, U64) = lifter_.lift_from(res);
             res
-        );
-        make_state_t_monad $ act
+        )
     );
     random_bytes = |size| make_state_t_monad $ |rng: rg| (
         let res: RngResult rg (rg, Array U8) = rng_bytes(size, rng);
@@ -48,7 +48,6 @@ impl [rg: Rng,
         let res: m (rg, Array U8) = lifter_.lift_from(res);
         res
     );
-    //random_bytes = undefined("");
 }
 
 // `random_U32` generates a random integer of U32.
