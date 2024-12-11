@@ -12,7 +12,11 @@ A trait for Random Number Generator.
 
 #### associated type `RngResult rg a`
 
+The result type of `rng_xxx` functions. This must be a monad.
+
 #### associated type `[m : *->*] RngLift rg m a`
+
+An implementation of `Lifter` trait. This should be `LifterImpl (n a) (m a)`, where `n a` = `RngResult rg a`.
 
 #### method `rng_U64 : rg -> Minilib.Trait.Rng::Rng::RngResult rg (rg, Std::U64)`
 

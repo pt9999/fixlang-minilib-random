@@ -3,13 +3,20 @@ module Minilib.Trait.Lifter;
 import Minilib.Monad.Identity;
 import Minilib.Monad.IO;
 
+// A trait which converts a value of a type to a value of another type.
 trait lf: Lifter {
+    // A type that the `lifter` converts from.
     type LiftFrom lf;
+    // A type that the `lifter` converts to.
     type LiftTo lf;
+    // A singleton instance of the lifter.
+    // This instance is required to select the implementation of `Lifter` trait.
     lifter: lf;
+    // Converts a value of type `LiftFrom lf` to a value of type `LiftTo lf`.
     lift_from: (LiftFrom lf) -> lf -> (LiftTo lf);
 }
 
+// An empty structure for `Lifter` implementation.
 type [n: * -> *, m: * -> *] LifterImpl from to = unbox struct {};
 
 impl [m: Monad] LifterImpl (Identity a) (m a): Lifter {

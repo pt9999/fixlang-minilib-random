@@ -34,19 +34,13 @@ impl [
         m: Monad
     ]
     StateT rg m: MonadRandomIF {
-    random_U64 = (
-        make_state_t_monad $ |rng: rg| (
-            let res: RngResult rg (rg, U64) = rng_U64(rng);
-            let lifter_ = (Lifter::lifter: RngLift rg m (rg, U64));
-            let res: m (rg, U64) = lifter_.lift_from(res);
-            res
-        )
+    random_U64 = make_state_t_monad $ |rng: rg| (
+        let lifter_ = Lifter::lifter: RngLift rg m (rg, U64);
+        lifter_.lift_from(rng.rng_U64)
     );
     random_bytes = |size| make_state_t_monad $ |rng: rg| (
-        let res: RngResult rg (rg, Array U8) = rng_bytes(size, rng);
-        let lifter_ = (Lifter::lifter: RngLift rg m (rg, Array U8));
-        let res: m (rg, Array U8) = lifter_.lift_from(res);
-        res
+        let lifter_ = Lifter::lifter: RngLift rg m (rg, Array U8);
+        lifter_.lift_from(rng.rng_bytes(size))
     );
 }
 
