@@ -22,48 +22,33 @@ trait [m: * -> *] m: MonadRandomIF {
 impl [rg: Rng,
     lf1: Lift,
     RngLift rg m (rg, U64) = lf1,
-    //Lifter (RngResult rg (rg, U64)) (m (rg, U64)) = lf1,
     RngResult rg (rg, U64) = from1,
     LiftFrom lf1 = from1,
     LiftTo lf1 = m (rg, U64),
-    /*
-    LiftFrom lf (rg, Array U8) = resbytes,
-    RngResult rg (rg, Array U8) = resbytes,
-    LiftTo lf (rg, Array U8) = m (rg, Array U8)
-    */
+    lf2: Lift,
+    RngLift rg m (rg, Array U8) = lf2,
+    RngResult rg (rg, Array U8) = from2,
+    LiftFrom lf2 = from2,
+    LiftTo lf2 = m (rg, Array U8),
     m: Monad
     ]
     StateT rg m: MonadRandomIF {
     random_U64 = (
         let act: rg -> m (rg, U64) = |rng: rg| (
             let res: RngResult rg (rg, U64) = rng_U64(rng);
-            let lifter_ = (lifter: RngLift rg m (rg, U64));
+            let lifter_ = (Lift::lifter: RngLift rg m (rg, U64));
             let res: m (rg, U64) = lifter_.lift_from(res);
             res
         );
         make_state_t_monad $ act
     );
-        /*
-        let act1: rg -> LiftTo lf (rg, U64) = |rng: rg| (
-            let res: RngResult rg (rg, U64) = rng_U64(rng);
-            //let lif: LiftFrom lf (rg, U64) -> LiftTo lf (rg, U64) = rng_lift(rng_lift_instance: lf);
-            //let res: LiftTo lf (rg, U64) = rng_lift(rng_lift_instance: lf)(res);
-            undefined("") //res
-        );
-        */
-        /*
-
-        let act: rg -> LiftTo lf (rg, U64)
-        = |rng: rg| (
-            let res: RngResult rg (rg, U64) = rng_U64(rng);
-            let res: LiftTo lf (rg, U64) = rng_lift(rng_lift_instance: lf)(res);
-            res
-        );
-        let act: rg -> m (rg, U64) = act;
-        make_state_t_monad $ act
-        */
-    //random_bytes = |size| make_state_t_monad $ rng_bytes(size) >> rng_lift(rng_lift_instance: lf);
-    random_bytes = undefined("");
+    random_bytes = |size| make_state_t_monad $ |rng: rg| (
+        let res: RngResult rg (rg, Array U8) = rng_bytes(size, rng);
+        let lifter_ = (Lift::lifter: RngLift rg m (rg, Array U8));
+        let res: m (rg, Array U8) = lifter_.lift_from(res);
+        res
+    );
+    //random_bytes = undefined("");
 }
 
 // `random_U32` generates a random integer of U32.
