@@ -22,7 +22,7 @@ A trait for a monad that generates random numbers every time.
 
 # Trait implementations
 
-### `impl [m : Std::Monad, rng : Minilib.Trait.Rng::Rng] Minilib.Monad.State::StateT rng m : Minilib.Monad.Random::MonadRandomIF`
+### `impl [rg : Minilib.Trait.Rng::Rng, lf1 : Minilib.Trait.Lifter::Lifter, lf2 : Minilib.Trait.Lifter::Lifter, m : Std::Monad] Minilib.Monad.State::StateT rg m : Minilib.Monad.Random::MonadRandomIF`
 
 # Values
 
