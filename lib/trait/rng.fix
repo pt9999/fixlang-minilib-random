@@ -5,6 +5,7 @@ import Minilib.Common.RandomEx;
 import Minilib.Functor.Pair;
 import Minilib.Monad.Identity;
 import Minilib.Monad.State;
+import Minilib.Monad.IO;
 
 // A trait for Random Number Generator.
 trait rg: Rng {
@@ -46,7 +47,7 @@ impl [m: MonadIOFail] RngLiftImpl IOFail m: RngLift {
 
 impl Random: Rng {
     type RngResult Random a = Identity a;
-    type RngLift Random m a = RngLiftImpl Random m a;
+    type RngLift Random m a = RngLiftImpl Identity m a;
     rng_U64 = |random| pure $ random.generate_U64;
     rng_bytes = |size, random| pure $ random.generate_array(size, generate_U8);
 }

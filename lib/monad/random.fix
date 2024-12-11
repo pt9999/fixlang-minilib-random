@@ -17,13 +17,11 @@ trait [m: * -> *] m: MonadRandomIF {
     random_bytes: I64 -> m (Array U8);
 }
 
-impl [m: Monad, rg: Rng, rgi: RngImplIF,
-    RngImplType rg m = rgi,
-    RngResult rgi (rg, U64) = m (rg, U64),
-    RngResult rgi (rg, Array U8) = m (rg, Array U8)]
+impl [m: Monad, rg: Rng, lf: RngLift,
+    RngLift rg m = lf]
     StateT rg m: MonadRandomIF {
-    random_U64 = make_state_t_monad $ rng_U64(rgi_instance);
-    random_bytes = |size| make_state_t_monad $ rng_bytes(rgi_instance, size);
+    random_U64 = make_state_t_monad $ rng_U64 >> rng_lift(rng_lift_instance);
+    random_bytes = |size| make_state_t_monad $ rng_bytes(size) >> rng_lift(rng_lift_instance);
 }
 
 // `random_U32` generates a random integer of U32.

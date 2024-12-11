@@ -42,11 +42,8 @@ generate_bytes = |size, secure_random| (
 );
 
 impl SecureRandom: Rng {
-    type RngImplType SecureRandom m = RngImpl SecureRandom m;
-}
-impl SecureRandom: Rng {
-    type RngResult SecureRandom a = IOFail a;
-    type RngLift SecureRandom m a = RngLiftImpl SecureRandom m a;
-    rng_U64 = |random| pure $ random.generate_U64;
-    rng_bytes = |size, random| pure $ random.generate_array(size, generate_U8);
+    type RngResult SecureRandom r = IOFail r;
+    type RngLift SecureRandom m a = RngLiftImpl IOFail m a;
+    rng_U64 = SecureRandom::generate_U64;
+    rng_bytes = SecureRandom::generate_bytes;
 }
