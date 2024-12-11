@@ -44,7 +44,7 @@ generate_bytes = |size, secure_random| (
 
 impl SecureRandom: Rng {
     type RngResult SecureRandom r = IOFail r;
-    type RngLift SecureRandom m a = Lifter (IOFail a) (m a);
+    type RngLift SecureRandom m a = LifterImpl (IOFail a) (m a);
     rng_U64 = SecureRandom::generate_U64;
     rng_bytes = SecureRandom::generate_bytes;
 }

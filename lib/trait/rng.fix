@@ -32,7 +32,7 @@ lens_rng = |act, g| act(g >> PairLT::make) >> PairLT::get;
 
 impl Random: Rng {
     type RngResult Random a = Identity a;
-    type RngLift Random m a = Lifter (Identity a) (m a);
+    type RngLift Random m a = LifterImpl (Identity a) (m a);
     rng_U64 = |random| pure $ random.generate_U64;
     rng_bytes = |size, random| pure $ random.generate_array(size, generate_U8);
 }

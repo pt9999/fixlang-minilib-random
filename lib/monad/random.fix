@@ -20,12 +20,12 @@ trait [m: * -> *] m: MonadRandomIF {
 
 
 impl [rg: Rng,
-    lf1: Lift,
+    lf1: Lifter,
     RngLift rg m (rg, U64) = lf1,
     RngResult rg (rg, U64) = from1,
     LiftFrom lf1 = from1,
     LiftTo lf1 = m (rg, U64),
-    lf2: Lift,
+    lf2: Lifter,
     RngLift rg m (rg, Array U8) = lf2,
     RngResult rg (rg, Array U8) = from2,
     LiftFrom lf2 = from2,
@@ -36,7 +36,7 @@ impl [rg: Rng,
     random_U64 = (
         let act: rg -> m (rg, U64) = |rng: rg| (
             let res: RngResult rg (rg, U64) = rng_U64(rng);
-            let lifter_ = (Lift::lifter: RngLift rg m (rg, U64));
+            let lifter_ = (Lifter::lifter: RngLift rg m (rg, U64));
             let res: m (rg, U64) = lifter_.lift_from(res);
             res
         );
@@ -44,7 +44,7 @@ impl [rg: Rng,
     );
     random_bytes = |size| make_state_t_monad $ |rng: rg| (
         let res: RngResult rg (rg, Array U8) = rng_bytes(size, rng);
-        let lifter_ = (Lift::lifter: RngLift rg m (rg, Array U8));
+        let lifter_ = (Lifter::lifter: RngLift rg m (rg, Array U8));
         let res: m (rg, Array U8) = lifter_.lift_from(res);
         res
     );
