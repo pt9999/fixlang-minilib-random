@@ -33,21 +33,3 @@ Generates a random byte array with specified size.
 ### `make : Std::IO::IOFail Minilib.Crypto.SecureRandom::SecureRandom`
 
 Creates a SecureRandom instance.
-
-## `namespace Minilib.Crypto.SecureRandom::SecureRandom`
-
-### `@data : Minilib.Crypto.SecureRandom::SecureRandom -> Std::FFI::Destructor Std::IO::IOHandle`
-
-Retrieves the field `data` from a value of `SecureRandom`.
-
-### `act_data : [f : Std::Functor] (Std::FFI::Destructor Std::IO::IOHandle -> f (Std::FFI::Destructor Std::IO::IOHandle)) -> Minilib.Crypto.SecureRandom::SecureRandom -> f Minilib.Crypto.SecureRandom::SecureRandom`
-
-Updates a value of `SecureRandom` by applying a functorial action to field `data`.
-
-### `mod_data : (Std::FFI::Destructor Std::IO::IOHandle -> Std::FFI::Destructor Std::IO::IOHandle) -> Minilib.Crypto.SecureRandom::SecureRandom -> Minilib.Crypto.SecureRandom::SecureRandom`
-
-Updates a value of `SecureRandom` by applying a function to field `data`.
-
-### `set_data : Std::FFI::Destructor Std::IO::IOHandle -> Minilib.Crypto.SecureRandom::SecureRandom -> Minilib.Crypto.SecureRandom::SecureRandom`
-
-Updates a value of `SecureRandom` by setting field `data` to a specified one.
