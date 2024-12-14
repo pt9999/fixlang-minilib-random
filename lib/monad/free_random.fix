@@ -1,3 +1,4 @@
+// Free Random Monad.
 module Minilib.Monad.FreeRandom;
 
 import Minilib.Monad.Random;

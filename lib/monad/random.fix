@@ -19,6 +19,9 @@ trait [m: * -> *] m: MonadRandomIF {
 }
 
 // An implementation of `MonadRandomIF` for the `StateT` monad.
+//
+// A state monad `StateT rg m` can be used as a `MonadRandom`,
+// if the state `rg` implements `Rng` trait, and the target monad `m` is compatible to `RngResult`.
 // The result type of `Rng` is lifted to the target monad `m` by the lifter.
 impl [
         rg: Rng,
@@ -85,6 +88,7 @@ random_array = |size, random| (
     )
 );
 
+// Shuffles an array.
 shuffle: [m: MonadRandom] Array a -> m (Array a);
 shuffle = |array| (
     loop_m(

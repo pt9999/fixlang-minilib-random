@@ -1,3 +1,4 @@
+// A trait which converts a value of a type to a value of another type.
 module Minilib.Trait.Lifter;
 
 import Minilib.Monad.Identity;
