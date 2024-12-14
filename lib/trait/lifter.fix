@@ -10,32 +10,36 @@ trait lf: Lifter {
     // A type that the `lifter` converts to.
     type LiftTo lf;
     // A singleton instance of the lifter.
-    // This instance is required to select the implementation of `Lifter` trait.
+    // NOTE: This instance is required to select the implementation of `Lifter` trait.
     lifter: lf;
     // Converts a value of type `LiftFrom lf` to a value of type `LiftTo lf`.
+    // NOTE: The second argument `lf` is ignored. It is required to select the implementation of `Lifter` trait.
     lift_from: (LiftFrom lf) -> lf -> (LiftTo lf);
 }
 
 // An empty structure for `Lifter` implementation.
 type [n: * -> *, m: * -> *] LifterImpl from to = unbox struct {};
 
+// A lifter implementation which lifts `Identity` monad to any monad.
 impl [m: Monad] LifterImpl (Identity a) (m a): Lifter {
     type LiftFrom (LifterImpl (Identity a) (m a)) = Identity a;
     type LiftTo (LifterImpl (Identity a) (m a)) = m a;
     lifter = LifterImpl{};
-    lift_from = |ma, _| pure $ ma.Identity::get;
+    lift_from = |iden, lifter| pure $ iden.Identity::get;
 }
 
+// A lifter implementation which lifts `IO` monad to a monad of `MonadIO`.
 impl [m: MonadIO] LifterImpl (IO a) (m a): Lifter {
     type LiftFrom (LifterImpl (IO a) (m a)) = IO a;
     type LiftTo (LifterImpl (IO a) (m a)) = m a;
     lifter = LifterImpl{};
-    lift_from = |ma, _| ma.lift_io;
+    lift_from = |io, lifter| io.lift_io;
 }
 
+// A lifter implementation which lifts `IOFail` monad to a monad of `MonadIOFail`.
 impl [m: MonadIOFail] LifterImpl (IOFail a) (m a): Lifter {
     type LiftFrom (LifterImpl (IOFail a) (m a)) = IOFail a;
     type LiftTo (LifterImpl (IOFail a) (m a)) = m a;
     lifter = LifterImpl{};
-    lift_from = |ma, _| ma.lift_iofail;
+    lift_from = |iof, lifter| iof.lift_iofail;
 }
