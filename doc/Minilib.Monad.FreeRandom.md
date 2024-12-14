@@ -1,5 +1,7 @@
 # `module Minilib.Monad.FreeRandom`
 
+Free Random Monad.
+
 # Types and aliases
 
 ## `namespace Minilib.Monad.FreeRandom`
