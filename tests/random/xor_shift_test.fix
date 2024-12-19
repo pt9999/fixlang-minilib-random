@@ -1,0 +1,115 @@
+module Main;
+
+import Random;
+
+import Minilib.Common.TimeEx;
+import Minilib.Random.XorShift;
+import Minilib.Monad.Identity;
+import Minilib.Monad.Random;
+import Minilib.Monad.State;
+import Minilib.Monad.IO;
+import Minilib.Trait.Rng;
+import Minilib.Trait.Lifter;
+import Minilib.Testing.UnitTest;
+
+test_rng_U64: TestCase;
+test_rng_U64 = (
+    make_test("test_generate_U64") $ |_|
+    let xor_shift = XorShift::init_by_seed(123_U64);
+    let (xor_shift, a) = xor_shift.rng_U64.get;
+    let (xor_shift, b) = xor_shift.rng_U64.get;
+    println("(a,b)="+(a,b).to_string).lift;;
+    pure()
+);
+
+test_rng_bytes: TestCase;
+test_rng_bytes = (
+    make_table_test("test_rng_bytes",
+        [
+            0,
+            1,
+            55,
+        ],
+        |size|
+        let xor_shift = XorShift::init_by_seed(123_U64 + size.to_U64);
+        let (xor_shift, bytes) = xor_shift.rng_bytes(size).get;
+        println("bytes="+bytes.to_string).lift;;
+        assert_equal("size", size, bytes.get_size)
+    )
+);
+
+test_monad_random: TestCase;
+test_monad_random = (
+    make_test("test_monad_random") $ |_|
+    let xor_shift = XorShift::init_by_seed(1234_U64);
+    do {
+        let a = *random_U64;
+        let b = *random_U64;
+        println("(a,b)="+(a,b).to_string).lift_io;;
+        let a = *random_bytes(4);
+        let b = *random_bytes(4);
+        println("(a,b)="+(a,b).to_string).lift_io;;
+        pure()
+    }
+    .eval_state_t(xor_shift)
+);
+
+type Container = unbox struct {
+    title: String,
+    xor_shift: XorShift,
+};
+
+impl Container: Rng {
+    type RngResult Container r = Identity r;
+    type RngLift Container m a = LifterImpl (Identity a) (m a);
+    rng_U64 = rng_U64.lens_rng(act_xor_shift);
+    rng_bytes = |size| rng_bytes(size).lens_rng(act_xor_shift);
+}
+
+test_container: TestCase;
+test_container = (
+    make_test("test_container") $ |_|
+    let container = Container {
+        title: "init",
+        xor_shift: XorShift::init_by_seed(12345_U64)
+    };
+    let container: Container = *do {
+        mod_state(set_title("started"));;
+        let container: Container = *get_state;
+        assert_equal("title", "started", container.@title).lift_iofail;;
+        let u64_a: U64 = *random_U64;
+        let u64_b: U64 = *random_U64;
+        println("u64:" + (u64_a, u64_b).to_string).lift_io;;
+        // If equal accidentally, change random seed
+        assert_true("u64", u64_a != u64_b).lift_iofail;;
+        mod_state(set_title("finished"));;
+        pure()
+    }.exec_state_t(container);
+    assert_equal("title", "finished", container.@title);;
+    pure()
+);
+
+test_benchmark: TestCase;
+test_benchmark = (
+    make_test("test_benchmark") $ |_|
+    let random = Random::init_by_seed(123_U64);
+    let xor_shift = XorShift::init_by_seed(123_U64);
+    let n = 1000000;
+    lift $ timeit("Random", |_| let _ = random.rng_bytes(n); ());;
+    lift $ timeit("xor_shift", |_| let _ = xor_shift.rng_bytes(n); ());;
+    pure()
+);
+
+main: IO ();
+main = (
+    [
+        test_rng_U64,
+        test_rng_bytes,
+        test_monad_random,
+        test_container,
+        test_benchmark,
+        TestCase::empty
+    ]
+    .run_test_driver
+);
+

@@ -11,6 +11,7 @@ files = [
     "lib/crypto/secure_random.fix",
     "lib/monad/free_random.fix",
     "lib/monad/random.fix",
+    "lib/random/xor_shift.fix",
     "lib/trait/rng.fix",
     "lib/trait/lifter.fix",
 ]
