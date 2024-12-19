@@ -44,6 +44,24 @@ impl Random: Rng {
     type RngResult Random a = Identity a;
     type RngLift Random m a = LifterImpl (Identity a) (m a);
     rng_U64 = |random| pure $ random.generate_U64;
-    rng_bytes = |size, random| pure $ random.generate_array(size, generate_U8);
+    rng_bytes = |size, random| (
+        let bytes: Array U8 = Array::fill(size, 0_U8);
+        loop(
+            (random, bytes, 0_U64, 0), |(random, bytes, x, i)|
+            if i >= size {
+                break $ pure $ (random, bytes)
+            };
+            if i.bit_and(7) == 0 {
+                let (random, x) = random.generate_U64;
+                let bytes = bytes.set(i, x.to_U8);
+                let x = x.shift_right(8_U64);
+                continue $ (random, bytes, x, i + 1)
+            } else {
+                let bytes = bytes.set(i, x.to_U8);
+                let x = x.shift_right(8_U64);
+                continue $ (random, bytes, x, i + 1)
+            }
+        )
+    );
 }
 
