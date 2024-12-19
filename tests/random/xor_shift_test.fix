@@ -1,4 +1,5 @@
-module Main;
+module XorShiftTest;
+//module Main;
 
 import Random;
 
@@ -126,7 +127,7 @@ main = (
         test_rng_bytes,
         test_monad_random,
         test_container,
-        test_benchmark,
+        //test_benchmark,
         TestCase::empty
     ]
     .run_test_driver

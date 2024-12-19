@@ -6,6 +6,7 @@ import RandomExTest;
 import SecureRandomTest;
 import FreeRandomTest;
 import MonadRandomTest;
+import XorShiftTest;
 
 testsuite: TestSuite;
 testsuite = [
@@ -13,6 +14,7 @@ testsuite = [
     ("SecureRandomTest", SecureRandomTest::main),
     ("FreeRandomTest", FreeRandomTest::main),
     ("MonadRandomTest", MonadRandomTest::main),
+    ("XorShiftTest", XorShiftTest::main),
 ];
 
 

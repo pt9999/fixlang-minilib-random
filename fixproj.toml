@@ -24,6 +24,7 @@ files = [
     "tests/crypto/secure_random_test.fix",
     "tests/monad/free_random_test.fix",
     "tests/monad/monad_random_test.fix",
+    "tests/random/xor_shift_test.fix",
 ]
 
 [[dependencies]]
