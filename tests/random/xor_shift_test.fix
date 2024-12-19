@@ -3,6 +3,7 @@ module Main;
 import Random;
 
 import Minilib.Common.TimeEx;
+import Minilib.Crypto.SecureRandom;
 import Minilib.Random.XorShift;
 import Minilib.Monad.Identity;
 import Minilib.Monad.Random;
@@ -93,9 +94,15 @@ test_benchmark: TestCase;
 test_benchmark = (
     make_test("test_benchmark") $ |_|
     let random = Random::init_by_seed(123_U64);
+    let secure_random = *SecureRandom::make;
     let xor_shift = XorShift::init_by_seed(123_U64);
     let n = 1000000;
     lift $ timeit("Random", |_| let _ = random.rng_bytes(n); ());;
+    lift $ timeit_io("SecureRandom", do {
+        eval *pure();
+        let _ = *secure_random.rng_bytes(n).to_result;
+        pure()
+    });;
     lift $ timeit("xor_shift", |_| let _ = xor_shift.rng_bytes(n); ());;
     /*
     Benchmark conditions:
@@ -105,8 +112,9 @@ test_benchmark = (
       Optimization level `optlevel = "default"`
       n = 1000000
     Benchmark result:
-      Random=() time/loop=97.387 msec
-      xor_shift=() time/loop=5.252 msec
+      Random=() time/loop=8.370 msec
+      SecureRandom=() time/loop=4.121 msec
+      xor_shift=() time/loop=5.714 msec
     */
     pure()
 );
