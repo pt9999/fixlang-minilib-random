@@ -97,6 +97,17 @@ test_benchmark = (
     let n = 1000000;
     lift $ timeit("Random", |_| let _ = random.rng_bytes(n); ());;
     lift $ timeit("xor_shift", |_| let _ = xor_shift.rng_bytes(n); ());;
+    /*
+    Benchmark conditions:
+      AMD Ryzen 7 2700
+      Windows 11 + WSL2 + Ubuntu 22.04
+      Fix version 2024/12/17
+      Optimization level `optlevel = "default"`
+      n = 1000000
+    Benchmark result:
+      Random=() time/loop=97.387 msec
+      xor_shift=() time/loop=5.252 msec
+    */
     pure()
 );
 
