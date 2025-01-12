@@ -1,11 +1,11 @@
 [general]
 name = "minilib-random"
-version = "0.3.5"
+version = "0.3.6"
 authors = ["pt9999"]
 license = "MIT"
 
 [build]
-opt_level = "separated"
+opt_level = "basic"
 files = [
     "lib/common/random_ex.fix",
     "lib/crypto/secure_random.fix",
@@ -17,7 +17,7 @@ files = [
 ]
 
 [build.test]
-opt_level = "separated"
+opt_level = "basic"
 files = [
     "tests/test.fix",
     "tests/common/random_ex_test.fix",
