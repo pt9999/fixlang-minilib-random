@@ -17,7 +17,7 @@ type SecureRandom = unbox struct {
 // Creates a SecureRandom instance.
 make: IOFail SecureRandom;
 make = (
-    let handle = *open_file(Path::parse("/dev/urandom").as_some, "r");
+    let handle = *open_file("/dev/urandom", "r");
     pure $ SecureRandom {
         data: Destructor::make(handle, |handle|
             eval *handle.close_file;
