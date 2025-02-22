@@ -1,5 +1,6 @@
 module FreeRandomTest;
 
+import Std hiding { Iterator::Item };
 import Random;
 
 import Minilib.Trait.Traversable;
@@ -16,24 +17,24 @@ type Item = unbox struct {
     bytes: Array U8,
 };
 
-impl FreeRandomTest::Item: ToString {
+impl Item: ToString {
     to_string = |item| "Item" + (item.@u64, item.@bytes).to_string;
 }
 
-generate_item: [m: MonadRandom] m FreeRandomTest::Item;
+generate_item: [m: MonadRandom] m Item;
 generate_item = (
-    pure $ FreeRandomTest::Item {
+    pure $ Item {
         u64: *random_U64,
         bytes: *random_bytes(4),
     }
 );
 
-generate_items: [m: MonadRandom] I64 -> m (Array FreeRandomTest::Item);
+generate_items: [m: MonadRandom] I64 -> m (Array Item);
 generate_items = |size| (
     Iterator::range(0, size).to_array.map_m(|i| generate_item)
 );
 
-my_items: FreeRandom (Array FreeRandomTest::Item);
+my_items: FreeRandom (Array Item);
 my_items = generate_items(5);
 
 test_free_random: TestCase;
