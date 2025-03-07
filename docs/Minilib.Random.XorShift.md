@@ -1,29 +1,37 @@
-# `module Minilib.Random.XorShift`
+# Minilib.Random.XorShift
+
+Defined in minilib-random@0.5.2
 
 A random number generator which uses Xorshift algorithm.
 
 For details, see: [Wikipedia: Xorshift](https://en.wikipedia.org/wiki/Xorshift)
 
-# Types and aliases
+## Values
 
-## `namespace Minilib.Random.XorShift`
+### namespace Minilib.Random.XorShift
 
-### `type XorShift = unbox struct { ...fields... }`
+#### init_by_seed
+
+Type: `Std::U64 -> Minilib.Random.XorShift::XorShift`
+
+Initializes a random number generator by a specified seed.
+
+## Types and aliases
+
+### namespace Minilib.Random.XorShift
+
+#### XorShift
+
+Defined as: `type XorShift = unbox struct { ...fields... }`
 
 A random number generator which uses Xorshift algorithm.
 
-#### field `data : Std::U64`
+##### field `data`
 
-# Traits and aliases
+Type: `Std::U64`
 
-# Trait implementations
+## Traits and aliases
 
-### `impl Minilib.Random.XorShift::XorShift : Minilib.Trait.Rng::Rng`
+## Trait implementations
 
-# Values
-
-## `namespace Minilib.Random.XorShift`
-
-### `init_by_seed : Std::U64 -> Minilib.Random.XorShift::XorShift`
-
-Initializes a random number generator by a specified seed.
+### impl `Minilib.Random.XorShift::XorShift : Minilib.Trait.Rng::Rng`

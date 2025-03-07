@@ -1,35 +1,47 @@
-# `module Minilib.Crypto.SecureRandom`
+# Minilib.Crypto.SecureRandom
+
+Defined in minilib-random@0.5.2
 
 Secure random number generator.
 
 Currently only Linux is supported, because it uses `/dev/urandom` as a secure random source.
 
-# Types and aliases
+## Values
 
-## `namespace Minilib.Crypto.SecureRandom`
+### namespace Minilib.Crypto.SecureRandom
 
-### `type SecureRandom = unbox struct { ...fields... }`
+#### generate_U64
 
-#### field `data : Std::FFI::Destructor Std::IO::IOHandle`
-
-# Traits and aliases
-
-# Trait implementations
-
-### `impl Minilib.Crypto.SecureRandom::SecureRandom : Minilib.Trait.Rng::Rng`
-
-# Values
-
-## `namespace Minilib.Crypto.SecureRandom`
-
-### `generate_U64 : Minilib.Crypto.SecureRandom::SecureRandom -> Std::IO::IOFail (Minilib.Crypto.SecureRandom::SecureRandom, Std::U64)`
+Type: `Minilib.Crypto.SecureRandom::SecureRandom -> Std::IO::IOFail (Minilib.Crypto.SecureRandom::SecureRandom, Std::U64)`
 
 Generates a random integer of U64.
 
-### `generate_bytes : Std::I64 -> Minilib.Crypto.SecureRandom::SecureRandom -> Std::IO::IOFail (Minilib.Crypto.SecureRandom::SecureRandom, Std::Array Std::U8)`
+#### generate_bytes
+
+Type: `Std::I64 -> Minilib.Crypto.SecureRandom::SecureRandom -> Std::IO::IOFail (Minilib.Crypto.SecureRandom::SecureRandom, Std::Array Std::U8)`
 
 Generates a random byte array with specified size.
 
-### `make : Std::IO::IOFail Minilib.Crypto.SecureRandom::SecureRandom`
+#### make
+
+Type: `Std::IO::IOFail Minilib.Crypto.SecureRandom::SecureRandom`
 
 Creates a SecureRandom instance.
+
+## Types and aliases
+
+### namespace Minilib.Crypto.SecureRandom
+
+#### SecureRandom
+
+Defined as: `type SecureRandom = unbox struct { ...fields... }`
+
+##### field `data`
+
+Type: `Std::FFI::Destructor Std::IO::IOHandle`
+
+## Traits and aliases
+
+## Trait implementations
+
+### impl `Minilib.Crypto.SecureRandom::SecureRandom : Minilib.Trait.Rng::Rng`

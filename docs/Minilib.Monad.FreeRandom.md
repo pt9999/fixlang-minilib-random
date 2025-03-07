@@ -1,36 +1,48 @@
-# `module Minilib.Monad.FreeRandom`
+# Minilib.Monad.FreeRandom
+
+Defined in minilib-random@0.5.2
 
 Free Random Monad.
 
-# Types and aliases
+## Values
 
-## `namespace Minilib.Monad.FreeRandom`
+### namespace Minilib.Monad.FreeRandom::FreeRandom
 
-### `type FreeRandom a = box union { ...variants... }`
+#### interpret
+
+Type: `[m : Minilib.Monad.Random::MonadRandom] Minilib.Monad.FreeRandom::FreeRandom a -> m a`
+
+## Types and aliases
+
+### namespace Minilib.Monad.FreeRandom
+
+#### FreeRandom
+
+Defined as: `type FreeRandom a = box union { ...variants... }`
 
 Free Random Monad.
 
 This type may be used in a situation such as polymorphic types cannot be used,
 for example an interface of an API.
 
-#### variant `fr_pure : a`
+##### variant `fr_pure`
 
-#### variant `fr_u64 : Std::U64 -> Minilib.Monad.FreeRandom::FreeRandom a`
+Type: `a`
 
-#### variant `fr_bytes : (Std::I64, Std::Array Std::U8 -> Minilib.Monad.FreeRandom::FreeRandom a)`
+##### variant `fr_u64`
 
-# Traits and aliases
+Type: `Std::U64 -> Minilib.Monad.FreeRandom::FreeRandom a`
 
-# Trait implementations
+##### variant `fr_bytes`
 
-### `impl Minilib.Monad.FreeRandom::FreeRandom : Minilib.Monad.Random::MonadRandomIF`
+Type: `(Std::I64, Std::Array Std::U8 -> Minilib.Monad.FreeRandom::FreeRandom a)`
 
-### `impl Minilib.Monad.FreeRandom::FreeRandom : Std::Functor`
+## Traits and aliases
 
-### `impl Minilib.Monad.FreeRandom::FreeRandom : Std::Monad`
+## Trait implementations
 
-# Values
+### impl `Minilib.Monad.FreeRandom::FreeRandom : Minilib.Monad.Random::MonadRandomIF`
 
-## `namespace Minilib.Monad.FreeRandom::FreeRandom`
+### impl `Minilib.Monad.FreeRandom::FreeRandom : Std::Functor`
 
-### `interpret : [m : Minilib.Monad.Random::MonadRandom] Minilib.Monad.FreeRandom::FreeRandom a -> m a`
+### impl `Minilib.Monad.FreeRandom::FreeRandom : Std::Monad`
