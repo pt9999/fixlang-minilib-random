@@ -98,13 +98,13 @@ test_benchmark = (
     let secure_random = *SecureRandom::make;
     let xor_shift = XorShift::init_by_seed(123_U64);
     let n = 1000000;
-    lift $ timeit("Random", |_| let _ = random.rng_bytes(n); ());;
+    lift $ timeit("Random", |_| eval random.rng_bytes(n); ());;
     lift $ timeit_io("SecureRandom", do {
-        eval *pure();
-        let _ = *secure_random.rng_bytes(n).to_result;
+        pure();;
+        secure_random.rng_bytes(n).to_result;;
         pure()
     });;
-    lift $ timeit("xor_shift", |_| let _ = xor_shift.rng_bytes(n); ());;
+    lift $ timeit("xor_shift", |_| eval xor_shift.rng_bytes(n); ());;
     /*
     Benchmark conditions:
       AMD Ryzen 7 2700

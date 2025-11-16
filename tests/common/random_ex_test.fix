@@ -41,7 +41,7 @@ test_generate_I64_range = (
         |(begin, end)|
         let random = Random::init_by_seed(123_U64);
         let (random, r) = random.generate_I64_range(begin, end);
-        eval *assert_true("range", begin <= r && r < end);
+        assert_true("range", begin <= r && r < end);;
         pure()
     )
 );

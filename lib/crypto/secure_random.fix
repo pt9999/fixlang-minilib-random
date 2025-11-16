@@ -20,7 +20,7 @@ make = (
     let handle = *open_file("/dev/urandom", "r");
     pure $ SecureRandom {
         data: Destructor::make(handle, |handle|
-            eval *handle.close_file;
+            handle.close_file;;
             pure $ handle
         )
     }
