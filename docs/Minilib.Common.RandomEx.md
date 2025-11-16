@@ -1,6 +1,6 @@
 # Minilib.Common.RandomEx
 
-Defined in minilib-random@0.5.2
+Defined in minilib-random@0.5.3
 
 Extension of `Random` module. For example, generating a random integer in range, or a random array.
 

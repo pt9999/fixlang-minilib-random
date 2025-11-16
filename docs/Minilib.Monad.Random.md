@@ -1,6 +1,6 @@
 # Minilib.Monad.Random
 
-Defined in minilib-random@0.5.2
+Defined in minilib-random@0.5.3
 
 Random Number Generator Monad
 
@@ -66,6 +66,10 @@ Type: `[m : Minilib.Monad.Random::MonadRandomIF] Std::I64 -> m (Std::Array Std::
 ## Traits and aliases
 
 ### namespace Minilib.Monad.Random
+
+#### trait `MonadRandom = Std::Functor + Std::Monad + Minilib.Monad.Random::MonadRandomIF`
+
+Kind: `*->*`
 
 #### trait `[m : *->*] m : MonadRandomIF`
 

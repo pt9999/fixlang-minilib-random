@@ -1,6 +1,6 @@
 # Minilib.Crypto.SecureRandom
 
-Defined in minilib-random@0.5.2
+Defined in minilib-random@0.5.3
 
 Secure random number generator.
 
