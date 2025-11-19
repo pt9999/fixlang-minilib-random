@@ -1,6 +1,6 @@
 # Minilib.Trait.Lifter
 
-Defined in minilib-random@0.5.3
+Defined in minilib-random@0.6.0
 
 A trait which converts a value of a type to a value of another type.
 
@@ -68,9 +68,9 @@ NOTE: The second argument `lf` is ignored. It is required to select the implemen
 
 ## Trait implementations
 
-### impl `[m : Std::Monad] Minilib.Trait.Lifter::LifterImpl (Minilib.Monad.Identity::Identity a) (m a) : Minilib.Trait.Lifter::Lifter`
+### impl `[m : Std::Monad] Minilib.Trait.Lifter::LifterImpl (Minilib.Monad.Iden::Iden a) (m a) : Minilib.Trait.Lifter::Lifter`
 
-A lifter implementation which lifts `Identity` monad to any monad.
+A lifter implementation which lifts `Iden` monad to any monad.
 
 ### impl `[m : Minilib.Monad.IO::MonadIO] Minilib.Trait.Lifter::LifterImpl (Std::IO a) (m a) : Minilib.Trait.Lifter::Lifter`
 

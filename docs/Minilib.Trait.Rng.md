@@ -1,6 +1,6 @@
 # Minilib.Trait.Rng
 
-Defined in minilib-random@0.5.3
+Defined in minilib-random@0.6.0
 
 A trait for Random Number Generator.
 
@@ -46,7 +46,7 @@ A trait for Random Number Generator.
 
 Defined as: `RngResult rg a`
 
-The result type of `rng_xxx` functions. This should be a monad, for example `Identity a`, `IOFail a` etc.
+The result type of `rng_xxx` functions. This should be a monad, for example `Iden a`, `IOFail a` etc.
 This result will be lifted by the lifter.
 
 ##### type `RngLift`
