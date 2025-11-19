@@ -1,7 +1,7 @@
 // A trait which converts a value of a type to a value of another type.
 module Minilib.Trait.Lifter;
 
-import Minilib.Monad.Identity;
+import Minilib.Monad.Iden;
 import Minilib.Monad.IO;
 
 // A trait which converts a value of a type to a value of another type.
@@ -21,12 +21,12 @@ trait lf: Lifter {
 // An empty structure for `Lifter` implementation.
 type [n: * -> *, m: * -> *] LifterImpl from to = unbox struct {};
 
-// A lifter implementation which lifts `Identity` monad to any monad.
-impl [m: Monad] LifterImpl (Identity a) (m a): Lifter {
-    type LiftFrom (LifterImpl (Identity a) (m a)) = Identity a;
-    type LiftTo (LifterImpl (Identity a) (m a)) = m a;
+// A lifter implementation which lifts `Iden` monad to any monad.
+impl [m: Monad] LifterImpl (Iden a) (m a): Lifter {
+    type LiftFrom (LifterImpl (Iden a) (m a)) = Iden a;
+    type LiftTo (LifterImpl (Iden a) (m a)) = m a;
     lifter = LifterImpl{};
-    lift_from = |iden, lifter| pure $ iden.Identity::get;
+    lift_from = |iden, lifter| pure $ iden.Iden::get;
 }
 
 // A lifter implementation which lifts `IO` monad to a monad of `MonadIO`.

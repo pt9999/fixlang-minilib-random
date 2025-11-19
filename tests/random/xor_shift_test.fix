@@ -6,7 +6,7 @@ import Random;
 import Minilib.Common.TimeEx;
 import Minilib.Crypto.SecureRandom;
 import Minilib.Random.XorShift;
-import Minilib.Monad.Identity;
+import Minilib.Monad.Iden;
 import Minilib.Monad.Random;
 import Minilib.Monad.State;
 import Minilib.Monad.IO;
@@ -62,8 +62,8 @@ type Container = unbox struct {
 };
 
 impl Container: Rng {
-    type RngResult Container r = Identity r;
-    type RngLift Container m a = LifterImpl (Identity a) (m a);
+    type RngResult Container r = Iden r;
+    type RngLift Container m a = LifterImpl (Iden a) (m a);
     rng_U64 = rng_U64.lens_rng(act_xor_shift);
     rng_bytes = |size| rng_bytes(size).lens_rng(act_xor_shift);
 }

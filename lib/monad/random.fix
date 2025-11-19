@@ -3,7 +3,7 @@ module Minilib.Monad.Random;
 
 import Random;
 
-import Minilib.Monad.Identity;
+import Minilib.Monad.Iden;
 import Minilib.Monad.State;
 import Minilib.Trait.Rng;
 import Minilib.Trait.Lifter;

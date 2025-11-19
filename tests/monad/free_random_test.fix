@@ -4,7 +4,7 @@ import Std hiding { Iterator::Item };
 import Random;
 
 import Minilib.Trait.Traversable;
-import Minilib.Monad.Identity;
+import Minilib.Monad.Iden;
 import Minilib.Monad.Random;
 import Minilib.Monad.FreeRandom;
 import Minilib.Monad.State;

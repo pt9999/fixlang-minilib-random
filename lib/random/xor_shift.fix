@@ -3,7 +3,7 @@
 // For details, see: [Wikipedia: Xorshift](https://en.wikipedia.org/wiki/Xorshift)
 module Minilib.Random.XorShift;
 
-import Minilib.Monad.Identity;
+import Minilib.Monad.Iden;
 import Minilib.Trait.Rng;
 import Minilib.Trait.Lifter;
 
@@ -26,8 +26,8 @@ init_by_seed = |seed| (
 );
 
 impl XorShift: Rng {
-    type RngResult XorShift a = Identity a;
-    type RngLift XorShift m a = LifterImpl (Identity a) (m a);
+    type RngResult XorShift a = Iden a;
+    type RngLift XorShift m a = LifterImpl (Iden a) (m a);
     rng_U64 = |xor_shift| (
         let x = xor_shift.@data;
         let x = x.bit_xor(x.shift_left(13_U64));

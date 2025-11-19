@@ -4,14 +4,14 @@ module Minilib.Trait.Rng;
 import Random;
 import Minilib.Common.RandomEx;
 import Minilib.Functor.Pair;
-import Minilib.Monad.Identity;
+import Minilib.Monad.Iden;
 import Minilib.Monad.State;
 import Minilib.Monad.IO;
 import Minilib.Trait.Lifter;
 
 // A trait for Random Number Generator.
 trait rg: Rng {
-    // The result type of `rng_xxx` functions. This should be a monad, for example `Identity a`, `IOFail a` etc.
+    // The result type of `rng_xxx` functions. This should be a monad, for example `Iden a`, `IOFail a` etc.
     // This result will be lifted by the lifter.
     type RngResult rg a;
     // A lifter that lifts `RngResult` into a desired monad.
@@ -41,8 +41,8 @@ lens_rng = |act, g| act(g >> PairLT::make) >> PairLT::get;
 
 // `Random` implements the `Rng` trait
 impl Random: Rng {
-    type RngResult Random a = Identity a;
-    type RngLift Random m a = LifterImpl (Identity a) (m a);
+    type RngResult Random a = Iden a;
+    type RngLift Random m a = LifterImpl (Iden a) (m a);
     rng_U64 = |random| pure $ random.generate_U64;
     rng_bytes = |size, random| (
         let bytes: Array U8 = Array::fill(size, 0_U8);
