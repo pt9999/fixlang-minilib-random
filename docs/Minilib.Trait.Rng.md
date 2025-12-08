@@ -1,6 +1,6 @@
 # Minilib.Trait.Rng
 
-Defined in minilib-random@0.6.1
+Defined in minilib-random@0.6.2
 
 A trait for Random Number Generator.
 
@@ -10,7 +10,7 @@ A trait for Random Number Generator.
 
 #### lens_rng
 
-Type: `[rg : Minilib.Trait.Rng::Rng, rg2 : Minilib.Trait.Rng::Rng, f : Std::Functor, Minilib.Trait.Rng::Rng::RngResult rg a = f a] ((rg -> Minilib.Functor.Pair::PairLT a f rg) -> rg2 -> Minilib.Functor.Pair::PairLT a f rg2) -> (rg -> f (rg, a)) -> rg2 -> f (rg2, a)`
+Type: `[f : Std::Functor, rg : Minilib.Trait.Rng::Rng, rg2 : Minilib.Trait.Rng::Rng, Minilib.Trait.Rng::Rng::RngResult rg a = f a] ((rg -> Minilib.Functor.Pair::PairLT a f rg) -> rg2 -> Minilib.Functor.Pair::PairLT a f rg2) -> (rg -> f (rg, a)) -> rg2 -> f (rg2, a)`
 
 Converts a `rng_xxx` function using a lens action.
 Useful for implementing the `Rng` trait for containers that have a member implementing the `Rng` trait.
