@@ -1,6 +1,6 @@
 # Minilib.Trait.Lifter
 
-Defined in minilib-random@0.6.2
+Defined in minilib-random@0.6.3
 
 A trait which converts a value of a type to a value of another type.
 
