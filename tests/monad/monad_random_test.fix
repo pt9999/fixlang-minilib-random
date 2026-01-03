@@ -141,7 +141,7 @@ impl Container: Rng {
     type RngResult Container a = Iden a;
     type RngLift Container m a = LifterImpl (Iden a) (m a);
     rng_U64 = rng_U64.lens_rng(act_random);
-    rng_bytes = |size| rng_bytes.lens_rng(act_random);
+    rng_bytes = |size| rng_bytes(size).lens_rng(act_random);
 }
 
 test_container: TestCase;
