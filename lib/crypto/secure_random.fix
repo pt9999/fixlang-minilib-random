@@ -19,10 +19,10 @@ make: IOFail SecureRandom;
 make = (
     let handle = *open_file("/dev/urandom", "r");
     pure $ SecureRandom {
-        data: Destructor::make(handle, |handle|
+        data: *Destructor::make(handle, |handle|
             handle.close_file;;
             pure $ handle
-        )
+        ).lift
     }
 );
 
