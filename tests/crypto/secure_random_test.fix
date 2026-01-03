@@ -78,6 +78,9 @@ test_container = (
         println("u64:" + (u64_a, u64_b).to_string).lift_io;;
         // If equal accidentally, change random seed
         assert_true("u64", u64_a != u64_b).lift_iofail;;
+        let bytes_a: Array U8 = *random_bytes(10);
+        let bytes_b: Array U8 = *random_bytes(10);
+        assert_true("bytes", bytes_a != bytes_b).lift_iofail;;
         State::mod_state(set_title("finished"));;
         pure()
     }.exec_state_t(container);
