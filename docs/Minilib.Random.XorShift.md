@@ -1,6 +1,6 @@
 # Minilib.Random.XorShift
 
-Defined in minilib-random@0.6.4
+Defined in minilib-random@0.6.5
 
 A random number generator which uses Xorshift algorithm.
 
