@@ -31,17 +31,17 @@ files = [
 
 [[dependencies]]
 name = "random"
-version = "1.1.1"
+version = "*"
 git = { url = "https://github.com/tttmmmyyyy/fixlang-random.git" }
 
 [[dependencies]]
 name = "minilib-common"
-version = "0.7.0"
+version = "*"
 # path = "../fixlang-minilib-common"
 git = { url = "https://github.com/pt9999/fixlang-minilib-common.git" }
 
 [[dependencies]]
 name = "minilib-monad"
-version = "0.7.1"
+version = "*"
 # path = "../fixlang-minilib-monad"
 git = { url = "https://github.com/pt9999/fixlang-minilib-monad.git" }

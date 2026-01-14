@@ -1,3 +1,7 @@
+## 0.6.7
+### Changed
+- fixproj.toml: change versions of dependencies to "*"
+
 ## 0.6.4
 ### Changed
 - adopt change of type of Destructor::make
