@@ -1,6 +1,6 @@
 # Minilib.Monad.Random
 
-Defined in minilib-random@0.6.7
+Defined in minilib-random@0.6.8
 
 Random Number Generator Monad
 
