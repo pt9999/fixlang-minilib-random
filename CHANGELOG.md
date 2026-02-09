@@ -1,3 +1,7 @@
+## 0.7.0
+### Changed
+- fixproj.toml: Bumped `fix_version` to 1.3.0. Depends on minilib-common@0.12.0, minilib-monad@0.11.0.
+
 ## 0.6.7
 ### Changed
 - fixproj.toml: change versions of dependencies to "*"
