@@ -1,6 +1,6 @@
 # Minilib.Trait.Lifter
 
-Defined in minilib-random@0.7.0
+Defined in minilib-random@0.7.1
 
 A trait which converts a value of a type to a value of another type.
 
@@ -12,12 +12,16 @@ A trait which converts a value of a type to a value of another type.
 
 Type: `[lf : Minilib.Trait.Lifter::Lifter] Minilib.Trait.Lifter::Lifter::LiftFrom lf -> lf -> Minilib.Trait.Lifter::Lifter::LiftTo lf`
 
+Trait member of `Minilib.Trait.Lifter::Lifter`
+
 Converts a value of type `LiftFrom lf` to a value of type `LiftTo lf`.
 NOTE: The second argument `lf` is ignored. It is required to select the implementation of `Lifter` trait.
 
 #### lifter
 
 Type: `[lf : Minilib.Trait.Lifter::Lifter] lf`
+
+Trait member of `Minilib.Trait.Lifter::Lifter`
 
 A singleton instance of the lifter.
 NOTE: This instance is required to select the implementation of `Lifter` trait.

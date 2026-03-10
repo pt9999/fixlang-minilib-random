@@ -1,6 +1,6 @@
 # Minilib.Monad.Random
 
-Defined in minilib-random@0.7.0
+Defined in minilib-random@0.7.1
 
 Random Number Generator Monad
 
@@ -53,11 +53,15 @@ Shuffles an array.
 
 Type: `[m : Minilib.Monad.Random::MonadRandomIF] m Std::U64`
 
+Trait member of `Minilib.Monad.Random::MonadRandomIF`
+
 `random_U64` generates a random integer of U64.
 
 #### random_bytes
 
 Type: `[m : Minilib.Monad.Random::MonadRandomIF] Std::I64 -> m (Std::Array Std::U8)`
+
+Trait member of `Minilib.Monad.Random::MonadRandomIF`
 
 `random_bytes` generates random bytes of specified size.
 

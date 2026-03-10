@@ -1,6 +1,6 @@
 # Minilib.Trait.Rng
 
-Defined in minilib-random@0.7.0
+Defined in minilib-random@0.7.1
 
 A trait for Random Number Generator.
 
@@ -24,11 +24,15 @@ Note that this function is similar to `State::lens_state_t`.
 
 Type: `[rg : Minilib.Trait.Rng::Rng] rg -> Minilib.Trait.Rng::Rng::RngResult rg (rg, Std::U64)`
 
+Trait member of `Minilib.Trait.Rng::Rng`
+
 Generates a random integer of U64.
 
 #### rng_bytes
 
 Type: `[rg : Minilib.Trait.Rng::Rng] Std::I64 -> rg -> Minilib.Trait.Rng::Rng::RngResult rg (rg, Std::Array Std::U8)`
+
+Trait member of `Minilib.Trait.Rng::Rng`
 
 Generates random bytes of specified size.
 
