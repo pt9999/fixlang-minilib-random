@@ -11,21 +11,21 @@ rev = "fd75a6634ec0c919f2d1703112d25da9a3c2346e"
 
 [[dependencies]]
 name = "minilib-common"
-version = "0.13.0"
-path = ".fixlang/deps/minilib-common_0.13.0"
+version = "0.13.1"
+path = ".fixlang/deps/minilib-common_0.13.1"
 
 [dependencies.git]
 repo = "https://github.com/pt9999/fixlang-minilib-common.git"
-rev = "d8af3860a44a3ab19ddf6a39c809b959821cbe98"
+rev = "87c043b05ab35881c81a53587cdbc72f0ae0e5cf"
 
 [[dependencies]]
 name = "minilib-monad"
-version = "0.11.3"
-path = ".fixlang/deps/minilib-monad_0.11.3"
+version = "0.11.4"
+path = ".fixlang/deps/minilib-monad_0.11.4"
 
 [dependencies.git]
 repo = "https://github.com/pt9999/fixlang-minilib-monad.git"
-rev = "edc3c6f075766b77d261af6e4209176254e79692"
+rev = "2efb940bb8d7c7350305bac87b7f98611e97bfed"
 
 [[dependencies]]
 name = "random"
