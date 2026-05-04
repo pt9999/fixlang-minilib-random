@@ -33,10 +33,10 @@ test_rng_bytes = (
             55,
         ],
         |size|
-        let xor_shift = XorShift::init_by_seed(123_U64 + size.to_U64);
+        let xor_shift = XorShift::init_by_seed(123_U64 + size.u64);
         let (xor_shift, bytes) = xor_shift.rng_bytes(size).get;
         println("bytes="+bytes.to_string).lift;;
-        assert_equal("size", size, bytes.get_size)
+        assert_equal("size", size, bytes.@size)
     )
 );
 
@@ -81,9 +81,9 @@ test_container = (
         assert_equal("title", "started", container.@title).lift_iofail;;
         let u64_a: U64 = *random_U64;
         let u64_b: U64 = *random_U64;
-        println("u64:" + (u64_a, u64_b).to_string).lift_io;;
+        println("u64val:" + (u64_a, u64_b).to_string).lift_io;;
         // If equal accidentally, change random seed
-        assert_true("u64", u64_a != u64_b).lift_iofail;;
+        assert_true("u64val", u64_a != u64_b).lift_iofail;;
         let bytes_a: Array U8 = *random_bytes(10);
         let bytes_b: Array U8 = *random_bytes(10);
         assert_true("bytes", bytes_a != bytes_b).lift_iofail;;

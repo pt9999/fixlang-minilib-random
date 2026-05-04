@@ -5,15 +5,15 @@ import Random;
 
 // `random.generate_U8` generates a random integer of U8.
 generate_U8: Random -> (Random, U8);
-generate_U8 = generate_U64 >> map(to_U8);
+generate_U8 = generate_U64 >> map(u8);
 
 // `random.generate_U16` generates a random integer of U16.
 generate_U16: Random -> (Random, U16);
-generate_U16 = generate_U64 >> map(to_U16);
+generate_U16 = generate_U64 >> map(u16);
 
 // `random.generate_U32` generates a random integer of U32.
 generate_U32: Random -> (Random, U32);
-generate_U32 = generate_U64 >> map(to_U32);
+generate_U32 = generate_U64 >> map(u32);
 
 // `random.generate_I64_range(begin, end)` generates a random integer `r`
 // such that `begin <= r && r < end`.
@@ -21,13 +21,13 @@ generate_U32 = generate_U64 >> map(to_U32);
 generate_I64_range: I64 -> I64 -> Random -> (Random, I64);
 generate_I64_range = |begin, end, random| (
     if !(begin < end) { undefined("generate_I64_range: begin >= end") };
-    let n = (end - begin).to_U64;
+    let n = (end - begin).u64;
     let (random, r) = random.generate_U64;
     let r = r / (U64::maximum / n);
     if r >= n {
         generate_I64_range(begin, end, random)  // try again
     };
-    let r = r.to_I64 + begin;
+    let r = r.i64 + begin;
     (random, r)
 );
 
@@ -50,12 +50,12 @@ generate_array = |size, f, random| (
 shuffle: Array a -> Random -> (Random, Array a);
 shuffle = |array, random| (
     loop(
-        (random, array, array.get_size - 1), |(random, array, i)|
+        (random, array, array.@size - 1), |(random, array, i)|
         if i <= 0 {
             break $ (random, array)
         };
         let (random, j) = random.generate_U64;
-        let j = (j % (i + 1).to_U64).to_I64;
+        let j = (j % (i + 1).u64).i64;
         let tmp = array.@(i);
         let array = array.set(i, array.@(j));
         let array = array.set(j, tmp);

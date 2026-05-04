@@ -30,8 +30,8 @@ make = (
 generate_U64: SecureRandom -> IOFail (SecureRandom, U64);
 generate_U64 = |secure_random| (
     let (secure_random, bytes) = *secure_random.generate_bytes(8);
-    let u64: U64 = *from_bytes(bytes).from_result;
-    pure $ (secure_random, u64)
+    let u64val: U64 = *from_bytes(bytes).from_result;
+    pure $ (secure_random, u64val)
 );
 
 // Generates a random byte array with specified size.

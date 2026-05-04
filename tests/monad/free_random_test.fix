@@ -13,18 +13,18 @@ import Minilib.Trait.Rng;
 import Minilib.Testing.UnitTest;
 
 type Item = unbox struct {
-    u64: U64,
+    u64val: U64,
     bytes: Array U8,
 };
 
 impl Item: ToString {
-    to_string = |item| "Item" + (item.@u64, item.@bytes).to_string;
+    to_string = |item| "Item" + (item.@u64val, item.@bytes).to_string;
 }
 
 generate_item: [m: MonadRandom] m Item;
 generate_item = (
     pure $ Item {
-        u64: *random_U64,
+        u64val: *random_U64,
         bytes: *random_bytes(4),
     }
 );
@@ -46,7 +46,7 @@ test_free_random = (
         let items = *my_items.interpret;
         println("items=" + items.to_string).lift_io;;
         // If equal accidentally, change random seed
-        assert_true("u64", items.@(0).@u64 != items.@(1).@u64).lift_iofail;;
+        assert_true("u64val", items.@(0).@u64val != items.@(1).@u64val).lift_iofail;;
         pure()
     }.eval_state_t(random)
 );

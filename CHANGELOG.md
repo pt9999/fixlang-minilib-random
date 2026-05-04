@@ -1,6 +1,7 @@
 ## 0.7.4
 ### Changed
 - Upgraded to minilib-monad@0.11.5, random@1.1.2.
+- Modified some code to remove the deprecation warnings.
 
 ## 0.7.2
 ### Changed

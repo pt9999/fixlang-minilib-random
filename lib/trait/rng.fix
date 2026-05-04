@@ -53,11 +53,11 @@ impl Random: Rng {
             };
             if i.bit_and(7) == 0 {
                 let (random, x) = random.generate_U64;
-                let bytes = bytes.set(i, x.to_U8);
+                let bytes = bytes.set(i, x.u8);
                 let x = x.shift_right(8_U64);
                 continue $ (random, bytes, x, i + 1)
             } else {
-                let bytes = bytes.set(i, x.to_U8);
+                let bytes = bytes.set(i, x.u8);
                 let x = x.shift_right(8_U64);
                 continue $ (random, bytes, x, i + 1)
             }
