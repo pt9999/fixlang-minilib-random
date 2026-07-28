@@ -1,6 +1,6 @@
 # Minilib.Trait.Rng
 
-Defined in minilib-random@0.7.4
+Defined in minilib-random@0.8.0
 
 A trait for Random Number Generator.
 

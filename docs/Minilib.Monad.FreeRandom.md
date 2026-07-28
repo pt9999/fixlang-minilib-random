@@ -1,6 +1,6 @@
 # Minilib.Monad.FreeRandom
 
-Defined in minilib-random@0.7.4
+Defined in minilib-random@0.8.0
 
 Free Random Monad.
 
