@@ -1,7 +1,8 @@
 // Free Random Monad.
 module Minilib.Monad.FreeRandom;
 
-import Minilib.Monad.Random;
+import Minilib.Monad.Random::{MonadRandom, MonadRandomIF, MonadRandomIF::{random_U64, random_bytes}};
+import Std::{Array, Functor, I64, Monad, U64, U8, Monad::{bind, pure}};
 
 // Free Random Monad.
 //

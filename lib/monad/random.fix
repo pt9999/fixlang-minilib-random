@@ -1,12 +1,14 @@
 // Random Number Generator Monad
 module Minilib.Monad.Random;
 
-import Random;
-
-import Minilib.Monad.Iden;
-import Minilib.Monad.State;
-import Minilib.Trait.Rng;
-import Minilib.Trait.Lifter;
+import Minilib.Monad.State::{make_state_t_monad, StateT};
+import Minilib.Trait.Lifter::{Lifter, Lifter::{lift_from, lifter, LiftFrom, LiftTo}};
+import Minilib.Trait.Rng::{Rng, Rng::{rng_U64, rng_bytes, RngLift, RngResult}};
+import Std::{
+    loop_m, undefined, Array, Functor, I64, Monad, U16, U32, U64, U8, 
+    Array::{@, @size, empty, push_back, set}, Functor::map, LoopState::{break_m, continue_m}, 
+    Monad::pure, ToI64::i64, ToU16::u16, ToU32::u32, ToU64::u64, ToU8::u8, U64::maximum
+};
 
 trait MonadRandom = Functor + Monad + MonadRandomIF;
 

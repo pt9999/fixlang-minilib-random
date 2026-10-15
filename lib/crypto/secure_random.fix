@@ -3,12 +3,17 @@
 // Currently only Linux is supported, because it uses `/dev/urandom` as a secure random source.
 module Minilib.Crypto.SecureRandom;
 
-import Minilib.Common.Assert;
-import Minilib.Monad.IO;
-import Minilib.Monad.Random;
-import Minilib.Monad.State;
-import Minilib.Trait.Rng;
-import Minilib.Trait.Lifter;
+import Minilib.Common.Assert::assert_lazy;
+import Minilib.Trait.Lifter::LifterImpl;
+import Minilib.Trait.Rng::Rng;
+import Std::{
+    Array, I64, U64, U8, FFI::{Destructor, Destructor::{borrow_io, make}}, FromBytes::from_bytes, 
+    IO::{
+        close_file, open_file, read_n_bytes, IOFail, IOHandle, 
+        IOFail::{from_io_result, from_result, lift, to_result}
+    }, 
+    Monad::pure
+};
 
 type SecureRandom = unbox struct {
     data: Destructor IOHandle

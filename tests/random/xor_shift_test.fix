@@ -1,18 +1,21 @@
 module XorShiftTest;
+
+import Minilib.Common.TimeEx::{timeit, timeit_io};
+import Minilib.Crypto.SecureRandom::make;
+import Minilib.Monad.IO::{MonadIOFailIF::lift_iofail, MonadIOIF::lift_io};
+import Minilib.Monad.Iden::{get, Iden};
+import Minilib.Monad.Random::MonadRandomIF::{random_U64, random_bytes};
+import Minilib.Monad.State::{eval_state_t, exec_state_t, mod_state, MonadStateIF::get_state};
+import Minilib.Random.XorShift::{init_by_seed, XorShift};
+import Minilib.Testing.UnitTest::{assert_equal, assert_true, make_table_test, make_test, run_test_driver, TestCase, TestCase::empty};
+import Minilib.Trait.Lifter::LifterImpl;
+import Minilib.Trait.Rng::{lens_rng, Rng, Rng::{rng_U64, rng_bytes}};
+import Random::init_by_seed;
+import Std::{
+    Array, IO, String, U64, U8, Array::@size, IO::{println, IOFail::{lift, to_result}}, Monad::pure, 
+    ToString::to_string, ToU64::u64
+};
 //module Main;
-
-import Random;
-
-import Minilib.Common.TimeEx;
-import Minilib.Crypto.SecureRandom;
-import Minilib.Random.XorShift;
-import Minilib.Monad.Iden;
-import Minilib.Monad.Random;
-import Minilib.Monad.State;
-import Minilib.Monad.IO;
-import Minilib.Trait.Rng;
-import Minilib.Trait.Lifter;
-import Minilib.Testing.UnitTest;
 
 test_rng_U64: TestCase;
 test_rng_U64 = (

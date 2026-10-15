@@ -1,14 +1,20 @@
 module MonadRandomTest;
 
-import Random;
-
-import Minilib.Monad.Iden;
-import Minilib.Monad.Random;
-import Minilib.Monad.State;
-import Minilib.Monad.IO;
-import Minilib.Trait.Rng;
-import Minilib.Trait.Lifter;
-import Minilib.Testing.UnitTest;
+import Minilib.Monad.IO::{MonadIOFailIF::lift_iofail, MonadIOIF::lift_io};
+import Minilib.Monad.Iden::Iden;
+import Minilib.Monad.Random::{
+    random_I64_range, random_U16, random_U32, random_U8, random_array, shuffle, 
+    MonadRandomIF::{random_U64, random_bytes}
+};
+import Minilib.Monad.State::{eval_state_t, exec_state_t, mod_state, MonadStateIF::get_state};
+import Minilib.Testing.UnitTest::{assert_equal, assert_true, make_table_test, make_test, run_test_driver, TestCase};
+import Minilib.Trait.Lifter::LifterImpl;
+import Minilib.Trait.Rng::{lens_rng, Rng, Rng::{rng_U64, rng_bytes}};
+import Random::{init_by_seed, Random};
+import Std::{
+    Array, I64, IO, String, U16, U32, U64, U8, Array::@size, I64::{maximum, minimum}, IO::println, 
+    Iterator::{range, to_array}, Monad::pure, ToString::to_string
+};
 
 test_random_u64: TestCase;
 test_random_u64 = (

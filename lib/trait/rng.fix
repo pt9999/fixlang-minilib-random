@@ -1,13 +1,14 @@
 // A trait for Random Number Generator.
 module Minilib.Trait.Rng;
 
-import Random;
-import Minilib.Common.RandomEx;
-import Minilib.Functor.Pair;
-import Minilib.Monad.Iden;
-import Minilib.Monad.State;
-import Minilib.Monad.IO;
-import Minilib.Trait.Lifter;
+import Minilib.Functor.Pair::{PairLT, PairLT::{get, make}};
+import Minilib.Monad.Iden::Iden;
+import Minilib.Trait.Lifter::LifterImpl;
+import Random::{generate_U64, Random};
+import Std::{
+    loop, Array, Functor, I64, U64, U8, Array::{fill, set}, I64::bit_and, LoopState::{break, continue}, 
+    Monad::pure, ToU8::u8, U64::shift_right
+};
 
 // A trait for Random Number Generator.
 trait rg: Rng {

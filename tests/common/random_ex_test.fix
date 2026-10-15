@@ -1,9 +1,9 @@
 module RandomExTest;
 
-import Random;
-
-import Minilib.Common.RandomEx;
-import Minilib.Testing.UnitTest;
+import Minilib.Common.RandomEx::{generate_I64_range, generate_U16, generate_U32, generate_U8};
+import Minilib.Testing.UnitTest::{assert_true, make_table_test, make_test, run_test_driver, TestCase};
+import Random::init_by_seed;
+import Std::{IO, I64::{maximum, minimum}, Monad::pure};
 
 test_generate_U8: TestCase;
 test_generate_U8 = (

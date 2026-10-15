@@ -3,9 +3,13 @@
 // For details, see: [Wikipedia: Xorshift](https://en.wikipedia.org/wiki/Xorshift)
 module Minilib.Random.XorShift;
 
-import Minilib.Monad.Iden;
-import Minilib.Trait.Rng;
-import Minilib.Trait.Lifter;
+import Minilib.Monad.Iden::{get, Iden};
+import Minilib.Trait.Lifter::LifterImpl;
+import Minilib.Trait.Rng::{Rng, Rng::rng_U64};
+import Std::{
+    loop, Array, U64, U8, Array::{fill, set}, I64::bit_and, LoopState::{break, continue}, Monad::pure, 
+    ToU8::u8, U64::{bit_xor, shift_left, shift_right}
+};
 
 // A random number generator which uses Xorshift algorithm.
 type XorShift = unbox struct {

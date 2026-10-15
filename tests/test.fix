@@ -1,12 +1,12 @@
 module Test;
 
-import Minilib.Testing.UnitTest;
-
-import RandomExTest;
-import SecureRandomTest;
-import FreeRandomTest;
-import MonadRandomTest;
-import XorShiftTest;
+import FreeRandomTest::main;
+import Minilib.Testing.UnitTest::{TestSuite, TestSuite::run};
+import MonadRandomTest::main;
+import RandomExTest::main;
+import SecureRandomTest::main;
+import Std::IO;
+import XorShiftTest::main;
 
 testsuite: TestSuite;
 testsuite = [

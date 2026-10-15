@@ -1,7 +1,12 @@
 // Extension of `Random` module. For example, generating a random integer in range, or a random array.
 module Minilib.Common.RandomEx;
 
-import Random;
+import Random::{generate_U64, Random};
+import Std::{
+    fix, loop, undefined, Array, I64, U16, U32, U8, Array::{@, @size, empty, push_back, set}, 
+    Functor::map, LoopState::{break, continue}, ToI64::i64, ToU16::u16, ToU32::u32, ToU64::u64, ToU8::u8, 
+    U64::maximum
+};
 
 // `random.generate_U8` generates a random integer of U8.
 generate_U8: Random -> (Random, U8);

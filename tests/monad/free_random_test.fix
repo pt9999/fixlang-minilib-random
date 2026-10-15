@@ -1,16 +1,16 @@
 module FreeRandomTest;
 
-import Std hiding { Iterator::Item };
-import Random;
-
-import Minilib.Trait.Traversable;
-import Minilib.Monad.Iden;
-import Minilib.Monad.Random;
-import Minilib.Monad.FreeRandom;
-import Minilib.Monad.State;
-import Minilib.Monad.IO;
-import Minilib.Trait.Rng;
-import Minilib.Testing.UnitTest;
+import Minilib.Monad.FreeRandom::{FreeRandom, FreeRandom::interpret};
+import Minilib.Monad.IO::{MonadIOFailIF::lift_iofail, MonadIOIF::lift_io};
+import Minilib.Monad.Random::{MonadRandom, MonadRandomIF::{random_U64, random_bytes}};
+import Minilib.Monad.State::eval_state_t;
+import Minilib.Testing.UnitTest::{assert_true, make_test, run_test_driver, TestCase};
+import Minilib.Trait.Traversable::map_m;
+import Random::init_by_seed;
+import Std::{
+    Array, I64, IO, ToString, U64, U8, Array::@, IO::println, Iterator::{range, to_array}, Monad::pure, 
+    ToString::to_string
+};
 
 type Item = unbox struct {
     u64val: U64,

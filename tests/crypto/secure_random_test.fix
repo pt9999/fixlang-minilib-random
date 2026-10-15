@@ -1,12 +1,16 @@
 module SecureRandomTest;
 
-import Minilib.Crypto.SecureRandom;
-import Minilib.Monad.Random;
-import Minilib.Monad.State;
-import Minilib.Monad.IO;
-import Minilib.Trait.Rng;
-import Minilib.Trait.Lifter;
-import Minilib.Testing.UnitTest;
+import Minilib.Crypto.SecureRandom::{generate_U64, generate_bytes, make, SecureRandom};
+import Minilib.Monad.IO::{MonadIOFailIF::lift_iofail, MonadIOIF::lift_io};
+import Minilib.Monad.Random::MonadRandomIF::{random_U64, random_bytes};
+import Minilib.Monad.State::{eval_state_t, exec_state_t, mod_state, MonadStateIF::get_state};
+import Minilib.Testing.UnitTest::{assert_equal, assert_true, make_table_test, make_test, run_test_driver, TestCase, TestCase::empty};
+import Minilib.Trait.Lifter::LifterImpl;
+import Minilib.Trait.Rng::{lens_rng, Rng, Rng::{rng_U64, rng_bytes}};
+import Std::{
+    Array, IO, String, U64, U8, Array::@size, IO::{println, IOFail, IOFail::lift}, Monad::pure, 
+    ToString::to_string
+};
 
 test_generate_U64: TestCase;
 test_generate_U64 = (
